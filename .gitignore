@@ -1,0 +1,10 @@
+# Secrets - NEVER push these
+.streamlit/secrets.toml
+
+# Runtime data
+data/
+__pycache__/
+*.pyc
+
+# OS files
+.DS_Store
