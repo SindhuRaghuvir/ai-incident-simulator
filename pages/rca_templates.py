@@ -233,10 +233,4 @@ TAMs own the customer relationship. Your RCA should always cover:
 - What follow-up is planned?
 
 ---
-
-**In interviews, you might hear:**
-
-> *"Tell me about a time you conducted a root cause analysis."*
-
-Use the structure above. Even if your example is from a different domain, the framework is the same: timeline → impact → root cause → action items → lessons learned.
 """)

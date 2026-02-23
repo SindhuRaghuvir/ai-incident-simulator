@@ -4,8 +4,8 @@ import streamlit as st
 import metrics_store
 import failure_simulator
 
-st.title("Customer Ticket Simulator")
-st.caption("Practice handling real support tickets. Read the customer's message, investigate, and write your response — just like a TAM interview.")
+st.title("Support Ticket Scenarios")
+st.caption("Explore common support ticket scenarios. Read the customer's message, investigate the failure mode, and draft your response.")
 
 st.divider()
 
@@ -156,6 +156,35 @@ James""",
             ],
         },
     ],
+    "context_window": [
+        {
+            "customer": "Raj Patel, Lead Engineer at DocuFlow",
+            "priority": "P2 - High",
+            "subject": "Knowledge assistant crashing on large document uploads",
+            "message": """Hi Support,
+
+Our knowledge assistant started throwing errors whenever users upload large policy documents (100+ pages). The error appears immediately when the document is processed.
+
+Error: "This model's maximum context length is 128000 tokens. Your request has 132456 tokens."
+
+This is breaking our document review workflow for compliance teams.
+
+Raj""",
+            "hints": [
+                "Context window exceeded — the full document + prompt is too long",
+                "Check their chunking config — they may be passing entire docs as context",
+                "top_k is probably too high, retrieving too many chunks at once",
+                "Implement token counting before the API call to prevent this",
+            ],
+            "good_response_points": [
+                "Explain what the context window limit means in plain terms",
+                "Identify the likely cause: too many chunks retrieved (top_k too high)",
+                "Recommend reducing top_k (e.g. from 10 to 3)",
+                "Suggest adding token counting before API calls",
+                "Offer to review their chunking strategy for large documents",
+            ],
+        }
+    ],
     "high_temperature": [
         {
             "customer": "Dana Foster, QA Lead at LegalAI",
@@ -286,7 +315,7 @@ if response:
 
     st.markdown("---")
     st.markdown("""
-    **TAM Response Formula:**
+    **Support Response Formula:**
     1. **Empathy** — Show you understand the impact
     2. **Status** — What do you know right now?
     3. **Action** — What are you doing about it?
@@ -294,23 +323,3 @@ if response:
     5. **Prevention** — How do you stop it happening again?
     """)
 
-st.divider()
-
-# -- Interview context --
-st.subheader("Interview Context")
-st.markdown(f"""
-**This ticket simulates a `{failure_simulator.FAILURE_MODES[failure_key]['label']}` scenario.**
-
-In a TAM interview, you might be asked:
-
-> *"Walk me through how you would handle this support ticket."*
-
-Your answer should cover:
-1. **Triage** — Assess priority and impact
-2. **Investigate** — What data do you look at? (Logs, metrics, status page)
-3. **Communicate** — What do you tell the customer right now?
-4. **Resolve** — Technical steps to fix it
-5. **Follow up** — RCA, prevention, relationship management
-
-**Pro tip:** Use this app as a live demo. Toggle the failure in Failure Lab, reproduce the issue in Chat, show the logs in Logs Viewer, and reference the Incident Runbook. That tells the interviewer you can *do* the job, not just talk about it.
-""")

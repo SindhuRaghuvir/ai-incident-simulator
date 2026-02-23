@@ -39,6 +39,12 @@ FAILURE_MODES = {
         "cause": "Misconfiguration, unvalidated user input passed to API parameters.",
         "fix": "Validate all API parameters server-side. Clamp temperature to acceptable range (0.0-1.0). Use config defaults.",
     },
+    "context_window": {
+        "label": "Context Window Exceeded",
+        "description": "Simulates sending a prompt that exceeds the model's maximum context length.",
+        "cause": "Prompt + retrieved context exceeds the model's token limit (e.g. 128k for gpt-4o-mini).",
+        "fix": "Truncate context before sending. Reduce top-k. Implement token counting before API call.",
+    },
 }
 
 
@@ -124,5 +130,23 @@ def pre_generation(context_docs: list[dict], params: dict, session_state) -> tup
 
     if "high_temperature" in active:
         params["temperature"] = 2.0
+
+    if "context_window" in active:
+        mock_response = httpx.Response(
+            status_code=400,
+            json={
+                "error": {
+                    "message": "This model's maximum context length is 128000 tokens. Your request has 132456 tokens.",
+                    "type": "invalid_request_error",
+                    "code": "context_length_exceeded",
+                }
+            },
+            request=httpx.Request("POST", "https://api.openai.com/v1/chat/completions"),
+        )
+        raise APIStatusError(
+            message="Context length exceeded (simulated)",
+            response=mock_response,
+            body=mock_response.json(),
+        )
 
     return context_docs, params

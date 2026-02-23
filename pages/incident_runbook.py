@@ -301,12 +301,10 @@ for key, runbook in RUNBOOKS.items():
 
 st.divider()
 
-# -- Interview prep section --
-st.subheader("Interview Prep: Common TAM Scenario Questions")
+# -- Common scenarios section --
+st.subheader("Common TAM Scenario Questions")
 st.markdown("""
-Use the failure toggles in **Failure Lab**, then walk through these runbooks as practice.
-
-**Question formats you'll see in interviews:**
+**Other scenarios:**
 
 1. **"A customer reports their AI assistant is returning wrong answers. Walk me through how you'd handle this."**
    → Use the *Retrieval Quality Degradation* runbook above.
