@@ -6,16 +6,18 @@ Built as both a **learning tool** and **portfolio piece** for Technical Account 
 
 ## Live Demo
 
-> Coming soon — Streamlit Cloud deployment
+**https://sindhu-ai-incident-simulator.streamlit.app**
+Password: `stratify2026`
 
 ## What It Does
 
 - **RAG Pipeline** — Ingests enterprise docs, retrieves relevant chunks via vector search, generates answers with OpenAI
-- **4 Failure Modes** — Rate limit (429), timeout (503), bad retrieval context, high temperature — toggled on/off in real time
+- **5 Failure Modes** — Rate limit (429), timeout (503), bad retrieval context, high temperature, context window exceeded (400) — toggled on/off in real time
 - **Structured Logging** — Request tracing with INFO/WARN/ERROR levels, component tags, and request IDs
 - **SLA Monitoring** — Uptime %, P95 latency, error budget gauge with configurable SLA targets
 - **Incident Runbooks** — Step-by-step diagnosis, resolution, and customer communication templates
-- **Customer Ticket Simulator** — 6 realistic support tickets mapped to failure modes for interview practice
+- **Live Ticket Queue** — auto-generates tickets from failure events, mirrors a real support inbox
+- **Resolved Ticket History** — closed tickets with full investigation reports, timeline, root cause, and customer response
 - **RCA Generator** — Auto-generates Root Cause Analysis documents from actual failure data
 - **Cost Tracking** — Per-request cost, cumulative spend, model pricing comparison
 
@@ -44,12 +46,13 @@ User Question
 | Page | What It Does |
 |------|-------------|
 | **Chat** | Ask questions, get AI answers with source attribution and per-request metrics |
-| **Metrics** | Latency breakdown, token usage, success/failure rates |
-| **Failure Lab** | Toggle 4 failure modes + educational content on causes and fixes |
-| **Cost** | Cumulative spend, per-request cost, model pricing comparison |
+| **Failure Lab** | Toggle 5 failure modes + educational content on causes and fixes |
+| **Ticket Queue** | Live ticket queue auto-generated from failure events |
+| **Resolved Tickets** | Closed tickets with full investigation reports and customer responses |
 | **Incident Runbook** | Diagnostic steps, resolution guides, customer email templates |
 | **Logs** | Structured log stream with filtering by level, component, and keyword |
-| **Ticket Simulator** | Practice handling realistic customer support tickets |
+| **Metrics** | Latency breakdown, token usage, success/failure rates |
+| **Cost** | Cumulative spend, per-request cost, model pricing comparison |
 | **SLA** | Uptime %, P95 latency, error budget gauge, breach tracking |
 | **RCA** | Auto-generate Root Cause Analysis documents, download as markdown |
 
