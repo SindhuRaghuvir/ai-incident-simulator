@@ -7,12 +7,6 @@ import metrics_store
 import failure_simulator
 import logger
 
-# -- API Key input --
-
-api_key = st.sidebar.text_input("OpenAI API Key", type="password", value=config.OPENAI_API_KEY, help="Get one at platform.openai.com/api-keys")
-if api_key:
-    config.OPENAI_API_KEY = api_key
-
 # -- Sidebar controls --
 
 st.sidebar.header("Settings")
