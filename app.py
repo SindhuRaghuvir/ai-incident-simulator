@@ -6,37 +6,6 @@ st.set_page_config(
     layout="wide",
 )
 
-# -- Password gate --
-def check_password():
-    """Returns True if the user entered the correct password."""
-    if st.session_state.get("authenticated"):
-        return True
-
-    # Check if a password is configured
-    try:
-        app_password = st.secrets.get("APP_PASSWORD", "")
-    except Exception:
-        app_password = ""
-
-    # If no password is set, skip the gate (local development)
-    if not app_password:
-        return True
-
-    st.title("🔒 Stratify Labs Knowledge Assistant")
-    st.caption("Enter the password to access the app.")
-    password = st.text_input("Password", type="password")
-
-    if password:
-        if password == app_password:
-            st.session_state.authenticated = True
-            st.rerun()
-        else:
-            st.error("Incorrect password.")
-    return False
-
-if not check_password():
-    st.stop()
-
 # -- Initialize shared state --
 
 if "messages" not in st.session_state:
