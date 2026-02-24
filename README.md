@@ -6,7 +6,7 @@ Built as both a **learning tool** and **portfolio piece** for Technical Account 
 
 ## Live Demo
 
-**https://sindhu-ai-incident-simulator.streamlit.app**
+**https://ai-incident-simulator-ctnjdzv8zkkshgbnxwcykt.streamlit.app**
 Password: `stratify2026`
 
 ## What It Does
