@@ -55,14 +55,52 @@ st.caption(f"Indexed {st.session_state.get('kb_chunk_count', 0)} chunks from kno
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
-        if msg.get("sources"):
-            with st.expander("Sources"):
-                for src in msg["sources"]:
-                    st.caption(f"{src['source']} (distance: {src['distance']:.3f})")
-                    st.text(src["text"][:200] + "...")
 
-# Chat input
-if prompt := st.chat_input("Ask about Stratify Labs..."):
+# Suggested questions — always shown, refreshes after every answer
+import random
+
+ALL_SUGGESTIONS = [
+    "My API key isn't working",
+    "I was charged unexpectedly — what happened?",
+    "How do I reset my password?",
+    "What's the difference between Starter and Professional?",
+    "My Slack bot isn't responding",
+    "Is Stratify Labs HIPAA compliant?",
+    "I got a 429 error — what do I do?",
+    "How do I cancel my subscription?",
+    "Can I get a refund?",
+    "My Zendesk articles aren't syncing",
+    "How do I enable MFA?",
+    "What file types can I upload?",
+    "My account is locked",
+    "How do I invite someone to my team?",
+    "Where can I find my invoice?",
+    "What happens to my data if I cancel?",
+    "I lost access to my MFA device",
+    "The API is returning 500 errors",
+    "My search results are irrelevant",
+    "How do I report a security issue?",
+    "Is there a free trial?",
+    "How do I talk to a human support agent?",
+    "What is your uptime SLA?",
+    "How do I upgrade my plan?",
+]
+
+if "current_suggestions" not in st.session_state:
+    st.session_state.current_suggestions = random.sample(ALL_SUGGESTIONS, 6)
+
+st.markdown("**Try asking:**")
+cols = st.columns(2)
+for i, suggestion in enumerate(st.session_state.current_suggestions):
+    if cols[i % 2].button(suggestion, use_container_width=True):
+        st.session_state.pending_prompt = suggestion
+        st.rerun()
+
+# Pick up a suggestion click or typed input
+# chat_input must always be rendered so it never disappears
+typed = st.chat_input("Ask about Stratify Labs...")
+prompt = st.session_state.pop("pending_prompt", None) or typed
+if prompt:
     # Show user message
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
@@ -158,22 +196,15 @@ if prompt := st.chat_input("Ask about Stratify Labs..."):
             # Display answer
             st.markdown(result["answer"])
 
-            # Show sources
-            with st.expander("Sources & Metrics"):
-                for doc in context_docs:
-                    st.caption(f"{doc['source']} (distance: {doc['distance']:.3f})")
-                cols = st.columns(4)
-                cols[0].metric("Retrieval", f"{retrieval_ms}ms")
-                cols[1].metric("Generation", f"{result['generation_ms']}ms")
-                cols[2].metric("Tokens", f"{result['input_tokens']}+{result['output_tokens']}")
-                cols[3].metric("Cost", f"${result['estimated_cost']:.4f}")
-
             # Save to history
             st.session_state.messages.append({
                 "role": "assistant",
                 "content": result["answer"],
                 "sources": context_docs,
             })
+
+            # Refresh suggestions for next round
+            st.session_state.current_suggestions = random.sample(ALL_SUGGESTIONS, 6)
 
             # Log metrics
             metrics_store.log_request(
