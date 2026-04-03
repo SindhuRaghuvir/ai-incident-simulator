@@ -2,7 +2,6 @@ import os
 import time
 import glob as globmod
 
-os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 import chromadb
 from openai import OpenAI
 
