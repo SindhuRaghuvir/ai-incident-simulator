@@ -2,19 +2,29 @@ import os
 import time
 import glob as globmod
 
-import chromadb
+import numpy as np
 from openai import OpenAI
 
 import config
+
+# In-memory vector store — re-populated on each Streamlit startup
+_store: list[dict] = []  # [{text, source, chunk_index, embedding}]
 
 
 def _get_openai_client():
     return OpenAI(api_key=config.OPENAI_API_KEY)
 
 
-def _get_chroma_client():
-    os.makedirs(config.CHROMA_DB_DIR, exist_ok=True)
-    return chromadb.PersistentClient(path=config.CHROMA_DB_DIR)
+def _embed(texts: list[str], client=None) -> np.ndarray:
+    client = client or _get_openai_client()
+    response = client.embeddings.create(input=texts, model="text-embedding-3-small")
+    return np.array([d.embedding for d in response.data], dtype=np.float32)
+
+
+def _cosine_similarity(query_vec: np.ndarray, matrix: np.ndarray) -> np.ndarray:
+    q = query_vec / (np.linalg.norm(query_vec) + 1e-10)
+    m = matrix / (np.linalg.norm(matrix, axis=1, keepdims=True) + 1e-10)
+    return m @ q
 
 
 def _chunk_text(text: str, chunk_size: int = None, overlap: int = None) -> list[str]:
@@ -35,7 +45,6 @@ def _chunk_text(text: str, chunk_size: int = None, overlap: int = None) -> list[
             if current_chunk:
                 chunks.append(current_chunk)
             if len(para) > chunk_size:
-                # Split long paragraphs by sentence
                 words = para.split()
                 current_chunk = ""
                 for word in words:
@@ -54,21 +63,14 @@ def _chunk_text(text: str, chunk_size: int = None, overlap: int = None) -> list[
     return chunks
 
 
-def ingest_knowledge_base(chroma_client=None) -> int:
-    """Load all markdown files from knowledge_base/ into ChromaDB. Returns doc count."""
-    client = chroma_client or _get_chroma_client()
-
-    # Delete and recreate to ensure fresh state
-    try:
-        client.delete_collection("knowledge_base")
-    except Exception:
-        pass
-    collection = client.get_or_create_collection("knowledge_base")
+def ingest_knowledge_base() -> int:
+    global _store
+    _store = []
+    client = _get_openai_client()
 
     md_files = globmod.glob(os.path.join(config.KNOWLEDGE_BASE_DIR, "*.md"))
     all_chunks = []
-    all_ids = []
-    all_metadata = []
+    all_meta = []
 
     for filepath in md_files:
         filename = os.path.basename(filepath)
@@ -76,72 +78,69 @@ def ingest_knowledge_base(chroma_client=None) -> int:
             content = f.read()
         chunks = _chunk_text(content)
         for i, chunk in enumerate(chunks):
-            doc_id = f"{filename}_{i}"
             all_chunks.append(chunk)
-            all_ids.append(doc_id)
-            all_metadata.append({"source": filename, "chunk_index": i})
+            all_meta.append({"source": filename, "chunk_index": i})
 
-    if all_chunks:
-        # ChromaDB has a batch limit, add in batches of 40
-        batch_size = 40
-        for start in range(0, len(all_chunks), batch_size):
-            end = start + batch_size
-            collection.add(
-                documents=all_chunks[start:end],
-                ids=all_ids[start:end],
-                metadatas=all_metadata[start:end],
-            )
+    if not all_chunks:
+        return 0
 
-    return len(all_chunks)
+    batch_size = 100
+    embeddings = []
+    for start in range(0, len(all_chunks), batch_size):
+        embs = _embed(all_chunks[start:start + batch_size], client)
+        embeddings.append(embs)
+
+    all_embeddings = np.vstack(embeddings)
+
+    for i, (chunk, meta) in enumerate(zip(all_chunks, all_meta)):
+        _store.append({
+            "text": chunk,
+            "source": meta["source"],
+            "chunk_index": meta["chunk_index"],
+            "embedding": all_embeddings[i],
+        })
+
+    return len(_store)
 
 
-def ingest_text(text: str, source_name: str, chroma_client=None) -> int:
-    """Add a single document to the existing knowledge base. Returns chunk count."""
-    client = chroma_client or _get_chroma_client()
-    collection = client.get_or_create_collection("knowledge_base")
-
+def ingest_text(text: str, source_name: str) -> int:
+    global _store
+    client = _get_openai_client()
     chunks = _chunk_text(text)
     if not chunks:
         return 0
 
-    # Use source name + timestamp to avoid ID collisions
-    import time as _t
-    ts = int(_t.time())
-    ids = [f"{source_name}_{ts}_{i}" for i in range(len(chunks))]
-    metadatas = [{"source": source_name, "chunk_index": i} for i in range(len(chunks))]
-
-    batch_size = 40
-    for start in range(0, len(chunks), batch_size):
-        end = start + batch_size
-        collection.add(
-            documents=chunks[start:end],
-            ids=ids[start:end],
-            metadatas=metadatas[start:end],
-        )
-
+    embeddings = _embed(chunks, client)
+    for i, (chunk, emb) in enumerate(zip(chunks, embeddings)):
+        _store.append({
+            "text": chunk,
+            "source": source_name,
+            "chunk_index": i,
+            "embedding": emb,
+        })
     return len(chunks)
 
 
-def retrieve(query: str, top_k: int = None, chroma_client=None) -> list[dict]:
-    """Retrieve relevant chunks from ChromaDB."""
+def retrieve(query: str, top_k: int = None) -> list[dict]:
     top_k = top_k or config.TOP_K_RESULTS
-    client = chroma_client or _get_chroma_client()
-
-    try:
-        collection = client.get_collection("knowledge_base")
-    except Exception:
+    if not _store:
         return []
 
-    results = collection.query(query_texts=[query], n_results=top_k)
+    client = _get_openai_client()
+    query_emb = _embed([query], client)[0]
 
-    docs = []
-    for i in range(len(results["documents"][0])):
-        docs.append({
-            "text": results["documents"][0][i],
-            "source": results["metadatas"][0][i]["source"],
-            "distance": results["distances"][0][i] if results.get("distances") else 0,
-        })
-    return docs
+    matrix = np.array([item["embedding"] for item in _store])
+    scores = _cosine_similarity(query_emb, matrix)
+    top_indices = np.argsort(scores)[::-1][:top_k]
+
+    return [
+        {
+            "text": _store[idx]["text"],
+            "source": _store[idx]["source"],
+            "distance": float(1 - scores[idx]),
+        }
+        for idx in top_indices
+    ]
 
 
 def generate(
@@ -151,7 +150,6 @@ def generate(
     temperature: float = None,
     openai_client=None,
 ) -> dict:
-    """Call OpenAI with retrieved context. Returns response dict."""
     model = model or config.DEFAULT_MODEL
     temperature = temperature if temperature is not None else config.DEFAULT_TEMPERATURE
     client = openai_client or _get_openai_client()
@@ -181,7 +179,6 @@ def generate(
     input_tokens = usage.prompt_tokens
     output_tokens = usage.completion_tokens
 
-    # Cost calculation
     model_pricing = config.MODELS.get(model, config.MODELS[config.DEFAULT_MODEL])
     cost = (
         (input_tokens / 1000) * model_pricing["input_cost_per_1k"]
