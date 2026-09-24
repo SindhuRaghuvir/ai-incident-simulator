@@ -8,3 +8,16 @@ __pycache__/
 
 # OS files
 .DS_Store
+
+# Harmony Family Concierge business files - NOT part of this app, keep private
+HFC_*
+business/
+blog_posts/
+harmony_portal/
+harmony_website/
+harmony_website_v1/
+harmony_website_extras/
+interview_prep/
+resume/
+portfolio/
+senior_care_*
