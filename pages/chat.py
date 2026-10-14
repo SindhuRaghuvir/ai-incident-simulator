@@ -14,6 +14,10 @@ st.sidebar.header("Settings")
 model = st.sidebar.selectbox("Model", list(config.MODELS.keys()), index=0)
 temperature = st.sidebar.slider("Temperature", 0.0, 1.0, config.DEFAULT_TEMPERATURE, 0.1)
 top_k = st.sidebar.slider("Retrieved chunks (top-k)", 1, 10, config.TOP_K_RESULTS)
+check_hallucinations = st.sidebar.toggle(
+    "Hallucination check", value=True,
+    help="After each answer, an LLM judge checks every claim against the retrieved chunks and reports a groundedness score.",
+)
 
 # -- File upload --
 st.sidebar.divider()
@@ -53,10 +57,34 @@ if active:
 st.title("Stratify Labs Knowledge Assistant")
 st.caption(f"Indexed {st.session_state.get('kb_chunk_count', 0)} chunks from knowledge base")
 
+VERDICT_ICON = {"supported": "✅", "unsupported": "⚠️", "contradicted": "❌"}
+
+
+def render_groundedness(g: dict):
+    """Show the hallucination check: score line + per-claim breakdown."""
+    if g["score"] is None:
+        st.caption("🔎 Hallucination check: no factual claims to verify (refusal or fallback answer)")
+        return
+    pct = int(round(g["score"] * 100))
+    color = "green" if pct >= 80 else "orange" if pct >= 50 else "red"
+    st.markdown(
+        f"🔎 **Groundedness:** :{color}[{pct}%] · {g['supported']}/{g['total']} claims supported by sources"
+    )
+    with st.expander("Hallucination analysis"):
+        for c in g["claims"]:
+            icon = VERDICT_ICON.get(c.get("verdict"), "❔")
+            st.markdown(f"{icon} **{c.get('verdict', '?')}** — {c.get('claim', '')}")
+            if c.get("evidence"):
+                st.caption(f"Source says: “{c['evidence']}”")
+        st.caption(f"Judge: {config.DEFAULT_MODEL}, temperature 0 · {g['check_ms']}ms · ${g['estimated_cost']:.5f}")
+
+
 # Display message history
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
+        if msg.get("groundedness"):
+            render_groundedness(msg["groundedness"])
 
 # Suggested questions — always shown, refreshes after every answer
 import random
@@ -101,6 +129,9 @@ ALL_SUGGESTIONS = [
     "Why am I seeing old content after updating a document?",
     "What does Enterprise onboarding look like?",
     "What happens in a QBR?",
+    "How long do refunds take to process?",
+    "What's the exact price of the Enterprise plan?",
+    "Which countries do you have data centers in?",
 ]
 
 if "current_suggestions" not in st.session_state:
@@ -158,6 +189,7 @@ if prompt:
                 retrieval_query, top_k=top_k,
                 extra_docs=st.session_state.get("uploaded_chunks"),
             )
+            context_docs = failure_simulator.post_retrieval(context_docs, st.session_state)
             retrieval_ms = int((time.time() - retrieval_start) * 1000)
 
             if not context_docs:
@@ -169,6 +201,12 @@ if prompt:
                 answer = "I couldn't find any relevant information in the knowledge base."
                 st.markdown(answer)
                 st.session_state.messages.append({"role": "assistant", "content": answer})
+                metrics_store.log_request(
+                    query=prompt, model=model, temperature=temperature, top_k=top_k,
+                    retrieval_ms=retrieval_ms, total_ms=int((time.time() - total_start) * 1000),
+                    success=False, failure_mode=failure_mode,
+                    error_message="Retrieval returned 0 results — index empty or not loaded",
+                )
                 st.stop()
 
             best_distance = min(doc["distance"] for doc in context_docs)
@@ -185,7 +223,7 @@ if prompt:
                 )
 
             # 2. Generation (with failure hook)
-            gen_params = {"model": model, "temperature": temperature}
+            gen_params = {"model": model, "temperature": temperature, "max_tokens": 1024}
             context_docs, gen_params = failure_simulator.pre_generation(
                 context_docs, gen_params, st.session_state
             )
@@ -201,6 +239,8 @@ if prompt:
                 context_docs=context_docs,
                 model=gen_params["model"],
                 temperature=gen_params["temperature"],
+                max_tokens=gen_params["max_tokens"],
+                system_prompt=gen_params.get("system_prompt"),
             )
             st.write_stream(token_stream)
 
@@ -211,6 +251,36 @@ if prompt:
                 f"(first token after {result.get('first_token_ms', result['generation_ms'])}ms)",
                 request_id=req_id, component="generation",
             )
+            # Silent-failure signals: the request "succeeded", but something is off
+            observations = []
+            if result.get("finish_reason") == "length":
+                observations.append(f"Answer truncated (finish_reason=length, max_tokens={gen_params['max_tokens']})")
+                logger.warn(observations[-1], request_id=req_id, component="generation")
+            if gen_params.get("system_prompt"):
+                logger.warn("Non-default system prompt in use", request_id=req_id, component="generation")
+            other_ms = total_ms - retrieval_ms - result["generation_ms"]
+            if total_ms > 5000:
+                observations.append(
+                    f"Slow response: {total_ms}ms total (retrieval {retrieval_ms}ms, generation {result['generation_ms']}ms, waiting {other_ms}ms)"
+                )
+                logger.warn(f"{observations[-1]} exceeds 5000ms latency SLO", request_id=req_id, component="chat")
+
+            # Hallucination check (LLM-as-judge groundedness)
+            groundedness = None
+            if check_hallucinations and result["answer"].strip():
+                with st.spinner("Checking answer against sources..."):
+                    groundedness = rag_engine.check_groundedness(result["answer"], context_docs)
+                render_groundedness(groundedness)
+                if groundedness["score"] is not None:
+                    pct = int(round(groundedness["score"] * 100))
+                    unsupported = groundedness["total"] - groundedness["supported"]
+                    msg = f"Groundedness {pct}% — {unsupported} of {groundedness['total']} claims not supported by retrieved context"
+                    if pct < 80:
+                        observations.append(f"Possible hallucination: {msg}")
+                        logger.warn(msg, request_id=req_id, component="eval")
+                    else:
+                        logger.info(msg, request_id=req_id, component="eval")
+
             logger.info(
                 f"Request complete — total: {total_ms}ms, tokens: {result['input_tokens']}+{result['output_tokens']}, cost: ${result['estimated_cost']:.4f}",
                 request_id=req_id, component="chat",
@@ -221,6 +291,7 @@ if prompt:
                 "role": "assistant",
                 "content": result["answer"],
                 "sources": context_docs,
+                "groundedness": groundedness,
             })
 
             # Refresh suggestions for next round
@@ -239,7 +310,8 @@ if prompt:
                 total_ms=total_ms,
                 success=True,
                 failure_mode=failure_mode,
-                estimated_cost=result["estimated_cost"],
+                error_message="; ".join(observations),
+                estimated_cost=result["estimated_cost"] + (groundedness["estimated_cost"] if groundedness else 0),
             )
 
         except Exception as e:

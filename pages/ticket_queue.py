@@ -36,6 +36,41 @@ TICKET_PERSONAS = {
         "priority": "P2 - High",
         "subject": "Assistant crashing on large document uploads",
     },
+    "hallucination": {
+        "customer": "Marcus Lee, Support Ops Manager at CloudCart",
+        "priority": "P1 - Critical",
+        "subject": "Bot quoted a refund policy we don't have",
+    },
+    "prompt_injection": {
+        "customer": "Elena Garcia, Security Lead at HealthBridge",
+        "priority": "P1 - Critical",
+        "subject": "Assistant told a user to email their API key",
+    },
+    "empty_retrieval": {
+        "customer": "Tom Becker, Platform Engineer at Shipwise",
+        "priority": "P2 - High",
+        "subject": "Every question returns 'no relevant documents' since deploy",
+    },
+    "truncated_output": {
+        "customer": "Aisha Khan, Content Lead at Learnly",
+        "priority": "P3 - Medium",
+        "subject": "Answers cut off mid-sentence",
+    },
+    "slow_latency": {
+        "customer": "Ben Ortiz, CTO at QuickHelp",
+        "priority": "P2 - High",
+        "subject": "Answers take 6+ seconds — no errors anywhere",
+    },
+    "auth_error": {
+        "customer": "Nina Volkova, Backend Engineer at PayLoop",
+        "priority": "P1 - Critical",
+        "subject": "All requests failing with 401 after key rotation",
+    },
+    "model_deprecated": {
+        "customer": "Sam Wright, ML Engineer at InsightIQ",
+        "priority": "P1 - Critical",
+        "subject": "Sudden 404 model_not_found on every request",
+    },
 }
 
 PRIORITY_COLOR = {
@@ -60,7 +95,8 @@ if df.empty or df[~df["success"]].empty:
     st.info("No active tickets. Trigger a failure in **Failure Lab** to generate tickets.")
     st.stop()
 
-failures = df[~df["success"]].copy()
+# Errors plus silent failures (request succeeded while a failure mode was active)
+failures = df[(~df["success"]) | (df["failure_mode"].fillna("") != "")].copy()
 
 # Group by failure_mode, keep most recent timestamp per mode
 grouped = (
@@ -148,7 +184,10 @@ else:
     latest = mode_logs.iloc[0]
 
     st.subheader("Customer Report")
-    st.markdown(f"> **Error:** `{latest['error_message']}`")
+    if latest["success"]:
+        st.markdown(f"> **No error returned** — the request succeeded (silent failure). Observed: {latest['error_message'] or 'nothing flagged automatically; check the answer and Logs'}")
+    else:
+        st.markdown(f"> **Error:** `{latest['error_message']}`")
     st.markdown(f"> **Query that triggered it:** *{latest['query']}*")
 
     st.divider()

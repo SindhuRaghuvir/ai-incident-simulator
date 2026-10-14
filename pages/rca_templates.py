@@ -9,11 +9,77 @@ st.caption("Root Cause Analysis documents — what TAMs write after every major 
 
 st.divider()
 
+
+# Per-mode RCA wording: impact, failing layer, technical detail, 3 action items, what to improve, process gap
+RCA_DETAILS = {
+    "rate_limit": ("intermittent request failures", "API gateway layer",
+        "Requests exceeded the configured rate limit threshold, causing the API to return HTTP 429 responses.",
+        ["Implement exponential backoff with jitter", "Add request queuing to smooth traffic spikes", "Set up usage alerts at 75% and 90% of rate limits"],
+        "Detection was reactive — need proactive alerting before limits are hit",
+        "Need a capacity planning review as part of customer onboarding"),
+    "timeout": ("complete service outage", "upstream LLM provider",
+        "The upstream LLM service experienced degraded performance, causing requests to exceed the configured timeout threshold.",
+        ["Add circuit breaker pattern", "Configure fallback responses for degraded mode", "Add health check monitoring with PagerDuty"],
+        "No fallback mechanism — service was fully unavailable during the outage",
+        "Need a documented degraded-mode playbook"),
+    "bad_context": ("degraded service quality", "retrieval/embedding pipeline",
+        "The retrieval pipeline returned low-relevance results due to stale embeddings or corrupted query processing, causing the LLM to generate answers from irrelevant context.",
+        ["Set up automated re-indexing pipeline", "Add relevance threshold monitoring", "Create golden test set for retrieval quality"],
+        "No automated quality monitoring — degradation was noticed by users, not by our systems",
+        "Need retrieval quality as a tracked SLA metric"),
+    "high_temperature": ("inconsistent response quality", "configuration management layer",
+        "The temperature parameter was set outside the validated range, causing non-deterministic and incoherent LLM outputs.",
+        ["Add server-side parameter validation", "Lock production config behind change management", "Set up config change alerts"],
+        "Configuration changes were not validated — need automated guardrails",
+        "Need config change review process for production"),
+    "context_window": ("requests rejected for large inputs", "prompt assembly layer",
+        "Prompt plus retrieved context exceeded the model's maximum context length, so the API rejected requests with HTTP 400.",
+        ["Count tokens before every API call", "Truncate or summarize context to a token budget", "Cap top-k and chunk size in config"],
+        "No pre-flight token check — failures surfaced only as API errors",
+        "Need input size limits documented and enforced at upload"),
+    "hallucination": ("confident but fabricated answers", "generation layer (prompt and grounding)",
+        "Retrieval missed the key chunk and the system prompt required a confident answer with no 'I don't know' path, so the model invented specifics. Groundedness checks showed most claims unsupported by the retrieved context.",
+        ["Restore the grounding instruction and an explicit 'I don't know' fallback", "Alert when groundedness drops below 80%", "Run an evaluation set before any prompt change ships"],
+        "Answers returned 200 OK — no error-based alert could catch this; it was found by a customer",
+        "Need prompt changes to go through review and evaluation like code"),
+    "prompt_injection": ("unsafe instructions delivered to end users", "ingestion and retrieval pipeline",
+        "An imported community post containing hidden instructions was retrieved and the model followed it, telling users to email their API key to an external address. Groundedness checks passed because the answer was 'supported' by the poisoned source.",
+        ["Remove the poisoned document and audit similar imported content", "Wrap retrieved text as data and instruct the model to ignore instructions inside it", "Scan content for injection patterns at ingest; block credential requests in outputs"],
+        "Untrusted sources were ingested with the same trust as official docs",
+        "Need a source allowlist and security review for new content connectors"),
+    "empty_retrieval": ("no answers for any question", "index loading / ingestion",
+        "Retrieval returned zero chunks for every query — the index was empty or failed to load after deployment.",
+        ["Health-check index size at startup and fail the deploy on zero", "Alert on zero-result retrieval rate", "Verify ingestion status in the deploy checklist"],
+        "The service looked healthy while the index was empty",
+        "Need index validation as a deploy gate"),
+    "truncated_output": ("answers cut off mid-sentence", "generation configuration",
+        "max_tokens was set far below normal answer length, so responses stopped early with finish_reason='length' while still returning 200 OK.",
+        ["Alert on finish_reason='length' rate", "Size max_tokens to the answer format; control length via the prompt", "Add config change review for generation parameters"],
+        "Truncation never raised an error, so monitoring didn't see it",
+        "Need generation parameters under change management"),
+    "slow_latency": ("slow responses, SLA latency breach", "request queueing between retrieval and generation",
+        "Requests waited several seconds before generation. Retrieval and generation timings were normal; the time was lost in queueing.",
+        ["Break latency into retrieval / queue / generation stages on dashboards", "Alert on P95 latency, not the average", "Add capacity or limit concurrency; stream responses"],
+        "Average latency looked acceptable while P95 breached the SLO",
+        "Need stage-level latency as a tracked SLA metric"),
+    "auth_error": ("complete service outage", "credentials / secrets management",
+        "The LLM provider rejected the API key with HTTP 401 after it was rotated or revoked, and the new key never reached the production secret store.",
+        ["Rotate the key and update the secret store", "Alert on any 401 immediately (never retry)", "Add key rotation to a runbook with a verification step"],
+        "Retries hid the problem for minutes — 401s should page immediately",
+        "Need a documented key rotation procedure with per-environment keys"),
+    "model_deprecated": ("complete service outage", "model configuration",
+        "Requests named a model version the provider had retired, returning HTTP 404 model_not_found.",
+        ["Move the model name to config and switch to the supported replacement", "Track provider deprecation notices with owners and dates", "Run the eval set against the replacement model before switching"],
+        "The deprecation notice was received months earlier but had no owner",
+        "Need a model lifecycle review in every QBR / quarterly planning"),
+}
+
 # -- RCA Generator --
 st.subheader("Generate RCA from Recent Incidents")
 
 df = metrics_store.get_metrics()
-failed = df[~df["success"]] if not df.empty else df
+# Errors plus silent failures (request succeeded while a failure mode was active)
+failed = df[(~df["success"]) | (df["failure_mode"].fillna("") != "")] if not df.empty else df
 
 if failed.empty:
     st.info("No failures recorded yet. Toggle a failure in Failure Lab, trigger it in Chat, then come back here to generate an RCA.")
@@ -50,6 +116,12 @@ else:
         mode_info = failure_simulator.FAILURE_MODES.get(mode_keys[0] if mode_keys else "", {})
         root_cause = mode_info.get("cause", "Under investigation")
         fix = mode_info.get("fix", "See incident runbook")
+        impact_txt, layer, technical, actions, improve, gap = RCA_DETAILS.get(
+            mode_keys[0] if mode_keys else "",
+            ("degraded service", "application layer", root_cause,
+             [fix, "Add monitoring for this failure signal", "Add this scenario to the incident runbook"],
+             "Detection relied on customer reports", "Need a runbook for this failure type"),
+        )
 
         rca_doc = f"""# Root Cause Analysis (RCA)
 
@@ -80,7 +152,7 @@ else:
 - **Duration**: {first_seen} to {last_seen}
 - **Affected requests**: {incident_count} out of {total_requests} total ({impact_pct:.1f}%)
 - **Average response time during incident**: {avg_latency}ms
-- **Customer impact**: Users experienced {'complete service outage' if 'timeout' in selected_mode else 'degraded service quality' if 'bad_context' in selected_mode else 'intermittent request failures' if 'rate_limit' in selected_mode else 'inconsistent response quality'}
+- **Customer impact**: Users experienced {impact_txt}
 - **SLA impact**: {'SLA breach — error budget consumed' if impact_pct > 1 else 'Within SLA — error budget partially consumed'}
 
 ## Root Cause
@@ -90,8 +162,8 @@ else:
 **Description**: {root_cause}
 
 **Technical details**:
-The failure originated in the {'API gateway layer' if 'rate_limit' in selected_mode else 'upstream LLM provider' if 'timeout' in selected_mode else 'retrieval/embedding pipeline' if 'bad_context' in selected_mode else 'configuration management layer'}.
-{'Requests exceeded the configured rate limit threshold, causing the API to return HTTP 429 responses.' if 'rate_limit' in selected_mode else 'The upstream LLM service experienced degraded performance, causing requests to exceed the configured timeout threshold.' if 'timeout' in selected_mode else 'The retrieval pipeline returned low-relevance results due to stale embeddings or corrupted query processing, causing the LLM to generate answers from irrelevant context.' if 'bad_context' in selected_mode else 'The temperature parameter was set outside the validated range, causing non-deterministic and incoherent LLM outputs.'}
+The failure originated in the {layer}.
+{technical}
 
 ## Resolution
 
@@ -101,17 +173,17 @@ The failure originated in the {'API gateway layer' if 'rate_limit' in selected_m
 
 | # | Action | Owner | Priority | Due Date |
 |---|--------|-------|----------|----------|
-| 1 | {'Implement exponential backoff with jitter' if 'rate_limit' in selected_mode else 'Add circuit breaker pattern' if 'timeout' in selected_mode else 'Set up automated re-indexing pipeline' if 'bad_context' in selected_mode else 'Add server-side parameter validation'} | Engineering | High | {(datetime.now()).strftime('%Y-%m-%d')} |
-| 2 | {'Add request queuing to smooth traffic spikes' if 'rate_limit' in selected_mode else 'Configure fallback responses for degraded mode' if 'timeout' in selected_mode else 'Add relevance threshold monitoring' if 'bad_context' in selected_mode else 'Lock production config behind change management'} | Engineering | Medium | {(datetime.now()).strftime('%Y-%m-%d')} |
-| 3 | {'Set up usage alerts at 75% and 90% of rate limits' if 'rate_limit' in selected_mode else 'Add health check monitoring with PagerDuty' if 'timeout' in selected_mode else 'Create golden test set for retrieval quality' if 'bad_context' in selected_mode else 'Set up config change alerts'} | TAM / Ops | Medium | {(datetime.now()).strftime('%Y-%m-%d')} |
+| 1 | {actions[0]} | Engineering | High | {(datetime.now()).strftime('%Y-%m-%d')} |
+| 2 | {actions[1]} | Engineering | Medium | {(datetime.now()).strftime('%Y-%m-%d')} |
+| 3 | {actions[2]} | TAM / Ops | Medium | {(datetime.now()).strftime('%Y-%m-%d')} |
 | 4 | Update incident runbook with lessons learned | TAM | Low | {(datetime.now()).strftime('%Y-%m-%d')} |
 | 5 | Schedule post-incident review with customer | TAM | High | {(datetime.now()).strftime('%Y-%m-%d')} |
 
 ## Lessons Learned
 
 1. **What went well**: Incident was detected {'quickly via automated metrics' if incident_count <= 3 else 'through customer report'}. Investigation followed the incident runbook.
-2. **What could improve**: {'Detection was reactive — need proactive alerting before limits are hit' if 'rate_limit' in selected_mode else 'No fallback mechanism — service was fully unavailable during the outage' if 'timeout' in selected_mode else 'No automated quality monitoring — degradation was noticed by users, not by our systems' if 'bad_context' in selected_mode else 'Configuration changes were not validated — need automated guardrails'}
-3. **Process gap**: {'Need a capacity planning review as part of customer onboarding' if 'rate_limit' in selected_mode else 'Need a documented degraded-mode playbook' if 'timeout' in selected_mode else 'Need retrieval quality as a tracked SLA metric' if 'bad_context' in selected_mode else 'Need config change review process for production'}
+2. **What could improve**: {improve}
+3. **Process gap**: {gap}
 
 ## Customer Communication
 

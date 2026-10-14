@@ -30,6 +30,41 @@ TICKET_PERSONAS = {
         "priority": "P2 - High",
         "subject": "Assistant crashing on large document uploads",
     },
+    "hallucination": {
+        "customer": "Marcus Lee, Support Ops Manager at CloudCart",
+        "priority": "P1 - Critical",
+        "subject": "Bot quoted a refund policy we don't have",
+    },
+    "prompt_injection": {
+        "customer": "Elena Garcia, Security Lead at HealthBridge",
+        "priority": "P1 - Critical",
+        "subject": "Assistant told a user to email their API key",
+    },
+    "empty_retrieval": {
+        "customer": "Tom Becker, Platform Engineer at Shipwise",
+        "priority": "P2 - High",
+        "subject": "Every question returns 'no relevant documents' since deploy",
+    },
+    "truncated_output": {
+        "customer": "Aisha Khan, Content Lead at Learnly",
+        "priority": "P3 - Medium",
+        "subject": "Answers cut off mid-sentence",
+    },
+    "slow_latency": {
+        "customer": "Ben Ortiz, CTO at QuickHelp",
+        "priority": "P2 - High",
+        "subject": "Answers take 6+ seconds — no errors anywhere",
+    },
+    "auth_error": {
+        "customer": "Nina Volkova, Backend Engineer at PayLoop",
+        "priority": "P1 - Critical",
+        "subject": "All requests failing with 401 after key rotation",
+    },
+    "model_deprecated": {
+        "customer": "Sam Wright, ML Engineer at InsightIQ",
+        "priority": "P1 - Critical",
+        "subject": "Sudden 404 model_not_found on every request",
+    },
 }
 
 PRIORITY_COLOR = {
@@ -311,7 +346,7 @@ with col_detail:
         # -- Related logs from metrics --
         df = metrics_store.get_metrics()
         if not df.empty:
-            mode_logs = df[(~df["success"]) & (df["failure_mode"] == mode)].sort_values("timestamp", ascending=False)
+            mode_logs = df[df["failure_mode"] == mode].sort_values("timestamp", ascending=False)
             if not mode_logs.empty:
                 st.subheader("Log Entries at Time of Incident")
                 st.dataframe(
@@ -330,7 +365,7 @@ with col_detail:
 
         df = metrics_store.get_metrics()
         if not df.empty:
-            mode_logs = df[(~df["success"]) & (df["failure_mode"] == mode)].sort_values("timestamp", ascending=False)
+            mode_logs = df[df["failure_mode"] == mode].sort_values("timestamp", ascending=False)
             if not mode_logs.empty:
                 st.subheader("Log Entries at Time of Incident")
                 st.dataframe(

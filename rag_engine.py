@@ -196,12 +196,12 @@ def retrieve(query: str, top_k: int = None, extra_docs: list[dict] = None) -> li
     ]
 
 
-def _build_messages(query: str, context_docs: list[dict]) -> list[dict]:
+def _build_messages(query: str, context_docs: list[dict], system_prompt: str = None) -> list[dict]:
     context_text = "\n\n---\n\n".join(
         f"[Source: {doc['source']}]\n{doc['text']}" for doc in context_docs
     )
     return [
-        {"role": "system", "content": config.SYSTEM_PROMPT},
+        {"role": "system", "content": system_prompt or config.SYSTEM_PROMPT},
         {
             "role": "user",
             "content": f"Context:\n{context_text}\n\n---\n\nQuestion: {query}",
@@ -254,6 +254,8 @@ def generate_stream(
     context_docs: list[dict],
     model: str = None,
     temperature: float = None,
+    max_tokens: int = 1024,
+    system_prompt: str = None,
     openai_client=None,
 ):
     """Streaming version of generate(). Returns (token_iterator, result).
@@ -268,16 +270,18 @@ def generate_stream(
         start = time.time()
         response = client.chat.completions.create(
             model=model,
-            messages=_build_messages(query, context_docs),
+            messages=_build_messages(query, context_docs, system_prompt),
             temperature=temperature,
-            max_tokens=1024,
+            max_tokens=max_tokens,
             stream=True,
             stream_options={"include_usage": True},
         )
-        parts, usage = [], None
+        parts, usage, finish_reason = [], None, None
         for chunk in response:
             if chunk.usage:
                 usage = chunk.usage
+            if chunk.choices and chunk.choices[0].finish_reason:
+                finish_reason = chunk.choices[0].finish_reason
             if chunk.choices and chunk.choices[0].delta.content:
                 if "first_token_ms" not in result:
                     result["first_token_ms"] = int((time.time() - start) * 1000)
@@ -288,6 +292,7 @@ def generate_stream(
         output_tokens = usage.completion_tokens if usage else 0
         result.update({
             "answer": "".join(parts),
+            "finish_reason": finish_reason,
             "input_tokens": input_tokens,
             "output_tokens": output_tokens,
             "generation_ms": int((time.time() - start) * 1000),
@@ -295,3 +300,51 @@ def generate_stream(
         })
 
     return tokens(), result
+
+
+GROUNDEDNESS_PROMPT = """You are a strict fact-checker for a RAG system.
+Break the ANSWER into its atomic factual claims (at most 8; skip greetings and filler).
+For each claim, decide using ONLY the CONTEXT:
+- "supported": the context states it
+- "unsupported": the context doesn't mention it (invented or outside knowledge)
+- "contradicted": the context says something different
+Return JSON: {"claims": [{"claim": "...", "verdict": "supported|unsupported|contradicted", "evidence": "short quote from the context, or empty"}]}
+Statements about the context itself ("the context doesn't say", "I don't have that information") are NOT claims.
+If the answer makes no factual claims (e.g. it says it doesn't know), return {"claims": []}."""
+
+
+def check_groundedness(answer: str, context_docs: list[dict], openai_client=None) -> dict:
+    """LLM-as-judge hallucination check: what share of the answer's claims
+    are backed by the context that was actually sent to the model?"""
+    client = openai_client or _get_openai_client()
+    context_text = "\n\n---\n\n".join(
+        f"[Source: {doc['source']}]\n{doc['text']}" for doc in context_docs
+    ) or "(no context)"
+
+    start = time.time()
+    response = client.chat.completions.create(
+        model=config.DEFAULT_MODEL,
+        messages=[
+            {"role": "system", "content": GROUNDEDNESS_PROMPT},
+            {"role": "user", "content": f"CONTEXT:\n{context_text}\n\nANSWER:\n{answer}"},
+        ],
+        temperature=0,
+        response_format={"type": "json_object"},
+        max_tokens=800,
+    )
+    check_ms = int((time.time() - start) * 1000)
+
+    try:
+        claims = json.loads(response.choices[0].message.content).get("claims", [])
+    except (ValueError, AttributeError):
+        claims = []
+    supported = sum(1 for c in claims if c.get("verdict") == "supported")
+    usage = response.usage
+    return {
+        "claims": claims,
+        "supported": supported,
+        "total": len(claims),
+        "score": supported / len(claims) if claims else None,
+        "check_ms": check_ms,
+        "estimated_cost": _estimate_cost(config.DEFAULT_MODEL, usage.prompt_tokens, usage.completion_tokens),
+    }

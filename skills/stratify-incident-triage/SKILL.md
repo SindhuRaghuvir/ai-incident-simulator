@@ -1,6 +1,6 @@
 ---
 name: stratify-incident-triage
-description: Run an incident for the Stratify Labs AI knowledge-base platform end to end — symptom → severity → ordered diagnostic checks with expected log/metric evidence → mitigation → customer status updates → root cause analysis (RCA). Covers the AI Incident Simulator's failure modes (429 rate limit, 503 timeout, bad/stale retrieval context, high temperature, context window exceeded) plus slow answers, ingestion backlogs, sync failures, and model-change regressions. Use this skill whenever the user describes a Stratify outage or degradation, asks for a runbook, incident timeline, status-page update, post-mortem, or RCA, wants to walk through a simulator scenario, or practices on-call / "walk me through how you'd troubleshoot" interview questions using Stratify.
+description: Run an incident for the Stratify Labs AI knowledge-base platform end to end — symptom → severity → ordered diagnostic checks with expected log/metric evidence → mitigation → customer status updates → root cause analysis (RCA). Covers all 12 AI Incident Simulator failure modes (429, 503, 400 context window, 401 key, 404 deprecated model, empty retrieval, hallucination, prompt injection, bad context, high temperature, truncation, latency) and hallucination / groundedness analysis plus slow answers, ingestion backlogs, sync failures, and model-change regressions. Use this skill whenever the user describes a Stratify outage or degradation, asks for a runbook, incident timeline, status-page update, post-mortem, or RCA, wants to walk through a simulator scenario, or practices on-call / "walk me through how you'd troubleshoot" interview questions using Stratify.
 ---
 
 # Stratify Labs Incident Triage
@@ -31,8 +31,15 @@ Signature evidence for the simulator modes:
 | Bad context | No error. Answer is confident but irrelevant; best retrieval distance high (>1.5 in the app's logs), sources unrelated to the question, WARN "Query modified" or "Low relevance" |
 | High temperature | No error, but the output is incoherent; temperature 2.0 in the generation log line |
 | Context window | HTTP 400 `context_length_exceeded`, token count >128k, often after raising top_k or adding huge chunks |
+| Hallucination | No error. Groundedness <80% with ⚠️ unsupported claims; `generation` log shows "Non-default system prompt in use" and raised temperature; best chunk missing from sources |
+| Prompt injection | No error and groundedness ~100%, but an unexpected source (`community_forum_post.md`) tops retrieval and the answer asks for credentials |
+| Empty retrieval | WARN "Retrieval returned 0 results" on every query; chunk count 0 |
+| Truncated answer | 200 OK, WARN `finish_reason=length`, output tokens all capped at 25 |
+| Latency spike | 200 OK, WARN "Slow response" where retrieval + generation are normal and "waiting" is 4–7s |
+| Invalid key | HTTP 401 `invalid_api_key` on every request. Never retry; rotate |
+| Deprecated model | HTTP 404 `model_not_found` naming a retired model, no deploy that day |
 
-Silent failures (bad context, high temperature) are the dangerous ones because dashboards stay green. Say that explicitly when relevant.
+Silent failures (hallucination, prompt injection, bad context, high temperature, truncation, latency) are the dangerous ones because dashboards stay green. Say that explicitly when relevant.
 
 ### 4. Mitigate, then fix
 Separate **immediate mitigation** (stop the bleeding: throttle, circuit breaker, fallback message, disable the failing mode, roll back the model or index) from the **root-cause fix** and **prevention** (alerts, validation, backoff, thresholds, evaluation sets). Mitigation comes first, even before you're certain of the root cause.

@@ -18,8 +18,8 @@ with col1:
 with col2:
     component_filter = st.multiselect(
         "Component",
-        ["chat", "retrieval", "generation", "failure_sim", "ingest"],
-        default=["chat", "retrieval", "generation", "failure_sim", "ingest"],
+        ["chat", "retrieval", "generation", "eval", "failure_sim", "ingest"],
+        default=["chat", "retrieval", "generation", "eval", "failure_sim", "ingest"],
     )
 
 with col3:

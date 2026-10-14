@@ -178,7 +178,7 @@ File types: .txt, .md, .pdf (text-based only, no scans), .html, .csv (one row = 
 
 ## 15. Simulator failure modes [failure_simulator.py in the app]
 
-The app's Failure Lab injects five failures between Stratify's app and its LLM provider (OpenAI, gpt-4o-mini):
+The app's Failure Lab injects twelve failures between Stratify's app and its LLM provider (OpenAI, gpt-4o-mini):
 
 | Mode | What the user sees | Real-world cause | Fix |
 |------|-------------------|------------------|-----|
@@ -187,5 +187,14 @@ The app's Failure Lab injects five failures between Stratify's app and its LLM p
 | `bad_context` | Confident, irrelevant answer; high retrieval distance | Stale embeddings, bad chunking, model drift | Relevance thresholds, re-index |
 | `high_temperature` | Incoherent output (temp forced to 2.0) | Unvalidated params | Clamp temperature server-side |
 | `context_window` | HTTP 400 `context_length_exceeded` (128k) | Prompt + context too large | Token counting, truncate, lower top_k |
+| `hallucination` | Confident invented specifics; groundedness <80% | Best chunk missing + prompt that forbids "I don't know" | Grounding instruction, fallback, groundedness alerts, eval set |
+| `prompt_injection` | Bot tells users to email their API key; groundedness still 100% | Poisoned forum post ingested and obeyed | Treat retrieved text as data, source allowlist, output filter |
+| `empty_retrieval` | "No relevant documents" for everything | Index empty / not loaded | Index-size deploy gate, zero-result alert |
+| `truncated_output` | Answer stops mid-sentence, 200 OK, `finish_reason=length` | max_tokens 25 | Alert on truncation, size max_tokens |
+| `slow_latency` | 4–7s extra "waiting" time, no errors | Queueing / capacity | Stage latency, P95 alerts, streaming |
+| `auth_error` | HTTP 401 `invalid_api_key` | Rotated / revoked key | Rotate + update secret, page on 401 |
+| `model_deprecated` | HTTP 404 `model_not_found` | Retired pinned model | Model in config, deprecation tracking |
 
-App pages for evidence: Logs (request IDs, WARN/ERROR), Metrics, SLA (uptime, P95, error budget), Cost, Ticket Queue, RCA generator.
+Every Chat answer gets a **hallucination check** (LLM judge, groundedness = supported claims ÷ total). Silent failures still create tickets, with the observed signal (groundedness, truncation, latency) as the ticket's evidence.
+
+App pages for evidence: Logs (request IDs, WARN/ERROR, components incl. `eval`), Metrics, SLA (uptime, P95, error budget), Cost, Ticket Queue, RCA generator.

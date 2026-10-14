@@ -113,7 +113,7 @@ with col4:
     if len(successful["temperature"].unique()) > 1:
         fig = px.scatter(
             successful, x="temperature", y="output_tokens",
-            title="Temperature vs Output Length", trendline="ols",
+            title="Temperature vs Output Length",
             labels={"temperature": "Temperature", "output_tokens": "Output Tokens"},
         )
         fig.update_layout(height=300)

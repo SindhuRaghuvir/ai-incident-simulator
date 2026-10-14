@@ -12,7 +12,8 @@ Password: `stratify2026`
 ## What It Does
 
 - **RAG Pipeline** — Ingests enterprise docs, retrieves relevant chunks via vector search, generates answers with OpenAI
-- **5 Failure Modes** — Rate limit (429), timeout (503), bad retrieval context, high temperature, context window exceeded (400) — toggled on/off in real time
+- **12 Failure Modes**: loud ones that return an error (rate limit 429, timeout 503, context window 400, invalid key 401, deprecated model 404, empty retrieval) and silent ones that return 200 OK with a bad answer (hallucination, prompt injection, bad context, high temperature, truncated answer, latency spike), toggled on/off in real time
+- **Hallucination Analysis**: an LLM judge breaks every answer into claims, checks each against the retrieved chunks, and reports a groundedness score; under 80% is logged and flagged on the ticket
 - **Structured Logging** — Request tracing with INFO/WARN/ERROR levels, component tags, and request IDs
 - **SLA Monitoring** — Uptime %, P95 latency, error budget gauge with configurable SLA targets
 - **Incident Runbooks** — Step-by-step diagnosis, resolution, and customer communication templates
@@ -46,7 +47,7 @@ User Question
 | Page | What It Does |
 |------|-------------|
 | **Chat** | Ask questions, get AI answers with source attribution and per-request metrics |
-| **Failure Lab** | Toggle 5 failure modes + educational content on causes and fixes |
+| **Failure Lab** | Toggle 12 failure modes, a hallucination analysis walkthrough, and causes and fixes |
 | **Ticket Queue** | Live ticket queue auto-generated from failure events |
 | **Resolved Tickets** | Closed tickets with full investigation reports and customer responses |
 | **Incident Runbook** | Diagnostic steps, resolution guides, customer email templates |
@@ -128,7 +129,7 @@ The app loads `kb_index/` at startup, so a cold start makes no embedding calls. 
 ├── config.py                   # All settings: models, pricing, prompts
 ├── rag_engine.py               # Ingest, retrieve, generate (RAG pipeline)
 ├── metrics_store.py            # SQLite metrics persistence
-├── failure_simulator.py        # 4 failure modes with pre/post hooks
+├── failure_simulator.py        # 12 failure modes with pre/post hooks
 ├── logger.py                   # Structured logging to SQLite
 ├── requirements.txt
 ├── pages/

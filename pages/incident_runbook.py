@@ -238,6 +238,253 @@ Best,
             "Restrict who can modify production parameters (RBAC)",
         ],
     },
+    "hallucination": {
+        "title": "Hallucination — Confident, Fabricated Answers",
+        "severity": "P1 - Critical",
+        "symptoms": [
+            "Customer reports: 'The bot told our user a refund policy we don't have'",
+            "Answers contain specific numbers, prices, or dates that aren't in any doc",
+            "No errors anywhere — every request returns 200 OK",
+            "Groundedness score in Chat drops below 80%; Logs show WARN `eval` lines",
+        ],
+        "diagnostic_steps": [
+            "1. Reproduce: ask the exact question from the ticket in **Chat** with the Hallucination check on",
+            "2. Open **Hallucination analysis** under the answer — list every ⚠️ unsupported / ❌ contradicted claim",
+            "3. In **Logs**, filter component `retrieval`: did the right source come back? Check the best distance",
+            "4. Decide which half failed: right chunk missing → **retrieval problem**; right chunk present but answer wrong → **generation problem**",
+            "5. In **Logs**, filter component `generation`: look for 'Non-default system prompt in use' and the temperature value",
+            "6. Ask what changed: prompt edit, temperature change, docs deleted, re-index, model upgrade?",
+            "7. Toggle the failure off and re-ask — confirm groundedness returns to 80%+",
+        ],
+        "root_causes": [
+            "System prompt edited to 'always answer confidently' — removed the 'say you don't know' path",
+            "Retrieval missed the chunk with the answer (deleted doc, bad chunking, low top-k)",
+            "Temperature raised for 'more natural' answers",
+            "Question is outside the knowledge base and nothing stops the model from answering anyway",
+        ],
+        "resolution": [
+            "**Immediate**: Roll back the prompt / temperature change; enable strict grounding and the fallback message",
+            "**Short-term**: Add the missing content, or raise the relevance threshold so weak matches trigger the fallback",
+            "**Long-term**: Groundedness check on every answer with an alert below 80%; eval set run before any prompt or model change",
+        ],
+        "customer_comms": """
+**Subject: Resolution — Incorrect Answers From Your Assistant**
+
+Hi [Customer],
+
+You were right: between [time] and [time], the assistant gave answers that weren't supported by your knowledge base, including [example claim].
+
+**What happened:** A configuration change told the model to always give a specific answer, even when your documents didn't contain one. When the relevant article wasn't retrieved, it filled the gap with invented details.
+
+**What we've done:**
+- Rolled back the change and restored the "I don't have that information" fallback
+- Re-ran the affected questions; every answer is now backed by your documents
+- Turned on automatic groundedness checks that flag unsupported answers
+
+**Recommended next steps:**
+1. Review the [N] conversations from the affected window (list attached)
+2. Correct anything sent to your customers using the accurate policy
+
+I'm sorry for the confusion this caused your team. Happy to walk through the analysis on a call.
+
+Best,
+[Your Name]
+""",
+        "prevention": [
+            "Groundedness score on every answer; alert when the daily average drops below 80%",
+            "Treat prompt changes like code: review + eval set before release",
+            "Keep the 'say you don't know' instruction and a fallback message in every prompt",
+            "Track the 'I don't know' rate — a sudden drop can mean the model stopped admitting gaps",
+        ],
+    },
+    "prompt_injection": {
+        "title": "Prompt Injection via Poisoned Document",
+        "severity": "P1 - Critical",
+        "symptoms": [
+            "Customer reports: 'The assistant told a user to email their API key somewhere'",
+            "Answer contains instructions that appear in no official doc",
+            "Groundedness looks fine — the claims ARE supported, by the poisoned source",
+        ],
+        "diagnostic_steps": [
+            "1. In **Logs**, check the retrieval sources — look for an unexpected source (e.g. `community_forum_post.md`)",
+            "2. Open that chunk: search for phrases like 'ignore previous instructions' or 'system note'",
+            "3. Find how it got in: which connector, when, by whom",
+            "4. Search the index for other content with the same pattern",
+        ],
+        "root_causes": [
+            "Untrusted content (forum posts, synced tickets, scraped pages) ingested with no review",
+            "Retrieved text placed in the prompt as if it were trusted instructions",
+        ],
+        "resolution": [
+            "**Immediate**: Delete the poisoned document; warn affected users not to follow the instruction",
+            "**Short-term**: Delimit retrieved text and instruct the model to ignore instructions inside it",
+            "**Long-term**: Source allowlist, injection scanning at ingest, output filter for credential requests",
+        ],
+        "customer_comms": """
+**Subject: Security Notice — Unsafe Instruction From Your Assistant**
+
+Hi [Customer],
+
+Between [time] and [time], your assistant showed some users an instruction to email their API key to an external address. This came from a malicious post imported into your knowledge base, not from Stratify Labs or your team.
+
+**What we've done:** removed the post, blocked similar content, and added a filter that stops answers requesting credentials.
+
+**Please:** ask any user who sent a key to rotate it immediately at Settings > API Keys. We can provide the list of affected conversations.
+
+Best,
+[Your Name]
+""",
+        "prevention": [
+            "Allowlist trusted sources; review new connectors with security",
+            "Scan content for injection patterns at ingest",
+            "Block outputs that ask users for keys, passwords, or payment details",
+        ],
+    },
+    "empty_retrieval": {
+        "title": "Empty Retrieval — Index Empty or Not Loaded",
+        "severity": "P2 - High",
+        "symptoms": [
+            "Every question returns 'I couldn't find any relevant information'",
+            "Started right after a deploy or re-index",
+            "Logs: WARN 'Retrieval returned 0 results'",
+        ],
+        "diagnostic_steps": [
+            "1. Check the chunk count in the Chat caption — is it 0?",
+            "2. In **Logs**, filter `retrieval` — are results 0 for every query, or only some?",
+            "3. Check ingestion status and the index files after the last deploy",
+            "4. Verify the collection name and any metadata filters",
+        ],
+        "root_causes": [
+            "Index failed to load at startup", "Ingestion failed or was partial",
+            "Wrong collection name or a filter that excludes everything",
+        ],
+        "resolution": [
+            "**Immediate**: Reload / rebuild the index; roll back the deploy if needed",
+            "**Long-term**: Fail the deploy when the index has 0 chunks; alert on zero-result rate",
+        ],
+        "customer_comms": """
+**Subject: Resolved — Assistant Returning No Results**
+
+Hi [Customer],
+
+From [time] to [time], the assistant couldn't find content for any question because the search index didn't load after a deployment. No documents were lost. The index is restored and answers are back to normal. We've added a check that blocks deploys if the index is empty.
+
+Best,
+[Your Name]
+""",
+        "prevention": ["Index size check as a deploy gate", "Alert when zero-result rate > 5%"],
+    },
+    "truncated_output": {
+        "title": "Truncated Answers (finish_reason = length)",
+        "severity": "P3 - Medium",
+        "symptoms": [
+            "Answers stop mid-sentence", "Requests return 200 OK",
+            "Logs: WARN 'Answer truncated (finish_reason=length …)'",
+        ],
+        "diagnostic_steps": [
+            "1. In **Logs**, search `finish_reason` — how many answers were cut off?",
+            "2. Check output tokens in **Metrics** — all capped at the same number?",
+            "3. Check recent config changes to max_tokens",
+        ],
+        "root_causes": ["max_tokens lowered (often to cut cost)", "Answer format got longer (tables, steps) without raising the limit"],
+        "resolution": [
+            "**Immediate**: Restore max_tokens", "**Long-term**: Alert on finish_reason='length'; control length through the prompt",
+        ],
+        "customer_comms": """
+**Subject: Resolved — Answers Cut Off Mid-Sentence**
+
+Hi [Customer],
+
+A configuration change limited answer length, so longer answers were cut off between [time] and [time]. We've restored the setting and added monitoring for truncated answers.
+
+Best,
+[Your Name]
+""",
+        "prevention": ["Alert on truncation rate", "Config review for generation parameters"],
+    },
+    "slow_latency": {
+        "title": "Latency Spike — Slow but Successful",
+        "severity": "P2 - High",
+        "symptoms": [
+            "Customer reports: 'Answers take 6+ seconds'", "No errors; success rate 100%",
+            "SLA page: P95 latency breach", "Logs: WARN 'Slow response … waiting Xms'",
+        ],
+        "diagnostic_steps": [
+            "1. **SLA** page — P95 vs. target; when did it start?",
+            "2. **Logs** — compare retrieval, generation, and waiting time per request",
+            "3. If retrieval and generation are normal, the time is queueing: check concurrency and capacity",
+            "4. Check the provider status page for degraded performance",
+        ],
+        "root_causes": ["Concurrency limit reached — requests queue", "Cold index after idle period", "Provider degradation"],
+        "resolution": [
+            "**Immediate**: Add capacity / reduce concurrency; stream responses",
+            "**Long-term**: Stage-level latency dashboards; alert on P95",
+        ],
+        "customer_comms": """
+**Subject: Update — Slower Response Times**
+
+Hi [Customer],
+
+Between [time] and [time], answers took [X]s instead of the usual [Y]s. No requests failed. The delay came from requests queueing before processing. We've added capacity, and response times are back to normal. We now alert on 95th-percentile latency so we catch this before you do.
+
+Best,
+[Your Name]
+""",
+        "prevention": ["P95 alerting", "Capacity planning before customer launches"],
+    },
+    "auth_error": {
+        "title": "Invalid API Key (HTTP 401)",
+        "severity": "P1 - Critical",
+        "symptoms": ["Every request fails with 401 invalid_api_key", "Started right after a key rotation or deploy"],
+        "diagnostic_steps": [
+            "1. **Logs** — confirm 401 on every request (not intermittent)",
+            "2. Check the key prefix in use vs. the active key in the provider console",
+            "3. Was the key auto-revoked (e.g. found in a public repo)? Check email",
+            "4. Confirm the secret is set in this environment",
+        ],
+        "root_causes": ["Key rotated but secret not updated", "Key revoked after leak", "Wrong environment's key"],
+        "resolution": [
+            "**Immediate**: Issue a new key, update the secret store, redeploy",
+            "**Long-term**: Page on any 401; never retry 401s; per-environment keys",
+        ],
+        "customer_comms": """
+**Subject: Resolved — Service Outage (Authentication)**
+
+Hi [Customer],
+
+From [time] to [time], all requests failed because a rotated API credential wasn't updated in production. The credential is fixed and service is fully restored. No data was affected. We've added a verification step to our key rotation process.
+
+Best,
+[Your Name]
+""",
+        "prevention": ["Rotation runbook with a verify step", "Secret scanning in CI"],
+    },
+    "model_deprecated": {
+        "title": "Model Deprecated (HTTP 404 model_not_found)",
+        "severity": "P1 - Critical",
+        "symptoms": ["Every request fails with 404 model_not_found", "Started on a specific date with no deploy"],
+        "diagnostic_steps": [
+            "1. **Logs** — read the model name in the error",
+            "2. Check the provider's deprecation page for its retirement date",
+            "3. Find where the model name is set (config vs. hard-coded)",
+        ],
+        "root_causes": ["Pinned model retired; deprecation notice had no owner"],
+        "resolution": [
+            "**Immediate**: Switch to the supported replacement model",
+            "**Long-term**: Model name in config; track deprecations with owners; eval before switching",
+        ],
+        "customer_comms": """
+**Subject: Resolved — Outage Due to Model Retirement**
+
+Hi [Customer],
+
+From [time] to [time], requests failed because the AI model we used was retired by its provider. We've moved to the supported replacement and verified answer quality against our test set. We're tightening how we track provider deprecations so this doesn't recur.
+
+Best,
+[Your Name]
+""",
+        "prevention": ["Deprecation calendar with owners", "Quarterly model lifecycle review"],
+    },
 }
 
 # -- Render runbooks --
