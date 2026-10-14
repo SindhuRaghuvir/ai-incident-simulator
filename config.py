@@ -14,6 +14,7 @@ MODELS = {
 }
 
 # RAG settings
+EMBEDDING_MODEL = "text-embedding-3-small"
 CHUNK_SIZE = 500
 CHUNK_OVERLAP = 50
 TOP_K_RESULTS = 3
@@ -22,7 +23,7 @@ DEFAULT_TEMPERATURE = 0.3
 # Paths
 KNOWLEDGE_BASE_DIR = os.path.join(os.path.dirname(__file__), "knowledge_base")
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
-CHROMA_DB_DIR = os.path.join(DATA_DIR, "chroma_db")
+KB_INDEX_DIR = os.path.join(os.path.dirname(__file__), "kb_index")  # pre-built embeddings, committed
 METRICS_DB_PATH = os.path.join(DATA_DIR, "metrics.db")
 
 SYSTEM_PROMPT = """You are a helpful enterprise support assistant for Stratify Labs, a cloud platform company.

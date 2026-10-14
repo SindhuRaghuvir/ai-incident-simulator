@@ -98,6 +98,16 @@ Then open http://localhost:8501
 
 Full incident lifecycle in under 5 minutes.
 
+## Adding Documents
+
+Drop a `.md` file into `knowledge_base/`, then rebuild the pre-computed index and commit `kb_index/` with it:
+
+```bash
+python3 -c "import rag_engine; print(rag_engine.build_index())"
+```
+
+The app loads `kb_index/` at startup, so a cold start makes no embedding calls. If the KB changes and the index isn't rebuilt, the app detects the mismatch and rebuilds on first load (slower, one time).
+
 ## Project Structure
 
 ```

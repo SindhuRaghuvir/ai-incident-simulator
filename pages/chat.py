@@ -29,7 +29,9 @@ if uploaded_files:
         file_key = f"uploaded_{uf.name}_{uf.size}"
         if file_key not in st.session_state:
             content = uf.read().decode("utf-8")
-            chunk_count = rag_engine.ingest_text(content, uf.name)
+            new_chunks = rag_engine.ingest_text(content, uf.name)
+            st.session_state.setdefault("uploaded_chunks", []).extend(new_chunks)
+            chunk_count = len(new_chunks)
             st.session_state[file_key] = chunk_count
             st.session_state.kb_chunk_count = st.session_state.get("kb_chunk_count", 0) + chunk_count
             st.sidebar.success(f"Added **{uf.name}** ({chunk_count} chunks)")
@@ -84,6 +86,21 @@ ALL_SUGGESTIONS = [
     "How do I talk to a human support agent?",
     "What is your uptime SLA?",
     "How do I upgrade my plan?",
+    "Which API errors should my code retry?",
+    "How do I stream answers from the API?",
+    "What happens when a model is deprecated?",
+    "Answers changed after a model upgrade — is this a bug?",
+    "What are the severity levels and response times?",
+    "How do I escalate a ticket that isn't moving?",
+    "Do SLA breaches earn service credits?",
+    "Why are my API responses slow?",
+    "My requests are timing out",
+    "The AI made up an answer — why?",
+    "What confidence threshold should I use?",
+    "My PDF failed with 'No extractable text'",
+    "Why am I seeing old content after updating a document?",
+    "What does Enterprise onboarding look like?",
+    "What happens in a QBR?",
 ]
 
 if "current_suggestions" not in st.session_state:
@@ -137,7 +154,10 @@ if prompt:
                 )
 
             retrieval_start = time.time()
-            context_docs = rag_engine.retrieve(retrieval_query, top_k=top_k)
+            context_docs = rag_engine.retrieve(
+                retrieval_query, top_k=top_k,
+                extra_docs=st.session_state.get("uploaded_chunks"),
+            )
             retrieval_ms = int((time.time() - retrieval_start) * 1000)
 
             if not context_docs:
@@ -175,26 +195,26 @@ if prompt:
                 request_id=req_id, component="generation",
             )
 
-            result = rag_engine.generate(
+            # Stream tokens to the screen as they arrive
+            token_stream, result = rag_engine.generate_stream(
                 query=prompt,
                 context_docs=context_docs,
                 model=gen_params["model"],
                 temperature=gen_params["temperature"],
             )
+            st.write_stream(token_stream)
 
             total_ms = int((time.time() - total_start) * 1000)
 
             logger.info(
-                f"Response received — {result['output_tokens']} tokens in {result['generation_ms']}ms",
+                f"Response received — {result['output_tokens']} tokens in {result['generation_ms']}ms "
+                f"(first token after {result.get('first_token_ms', result['generation_ms'])}ms)",
                 request_id=req_id, component="generation",
             )
             logger.info(
                 f"Request complete — total: {total_ms}ms, tokens: {result['input_tokens']}+{result['output_tokens']}, cost: ${result['estimated_cost']:.4f}",
                 request_id=req_id, component="chat",
             )
-
-            # Display answer
-            st.markdown(result["answer"])
 
             # Save to history
             st.session_state.messages.append({

@@ -1,0 +1,918 @@
+{
+ "fingerprint": "e95a32af592f4736b5e2249d913e85dd4d944bcf9322e04baa5f4bef82ad1c9c",
+ "embedding_model": "text-embedding-3-small",
+ "chunks": [
+  {
+   "text": "# Account and Login Help\n\n## Password and Login Issues\n\n### How do I reset my password?\n1. Go to dashboard.stratifylabs.io and click \"Sign In\"\n2. Click \"Forgot password?\" below the login form\n3. Enter the email address associated with your account\n4. Check your inbox for a password reset link \u2014 it arrives within a few minutes\n5. Click the link and set a new password\n\nThe reset link expires after 1 hour. If it expires, request a new one by repeating the steps above.",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "### I'm not receiving the password reset email\nFirst, check your spam or junk folder. If it's not there:\n- Make sure you're using the email address associated with your Stratify Labs account\n- Try adding no-reply@stratifylabs.io to your contacts and request again\n- If your company uses email filtering, ask your IT admin to allowlist mail from stratifylabs.io\n\nStill nothing? Contact support@stratifylabs.io and we'll reset it for you manually.",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "### My account is locked \u2014 what do I do?\nAccounts are temporarily locked after several failed login attempts. To unlock your account:\n\n1. Wait 15 minutes and try again \u2014 the lockout lifts automatically\n2. If you're still locked out, click \"Forgot password?\" to reset your password, which also unlocks the account\n3. If neither works, contact support@stratifylabs.io and we'll unlock your account right away",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "### I can't log in with SSO \u2014 what should I check?\nSSO login issues are usually caused by one of these:",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "1. **SSO not configured** \u2014 SSO is available on Professional and Enterprise plans. If your plan doesn't include it, you'll need to use email/password login. 2. **Identity provider misconfiguration** \u2014 Your IT admin may need to verify the SAML/OIDC setup in your IdP settings. 3. **Account not provisioned** \u2014 Your email address may not be in the IdP user directory. Ask your admin to add you. 4. **SSO enforced on your org** \u2014 If your org has enforced SSO and disabled password login, you must log in",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "through your company's identity provider.\n\nIf you're the org Owner and have locked yourself out of SSO, contact support@stratifylabs.io \u2014 we have a recovery path that doesn't require going through your IdP.\n\n---\n\n## Multi-Factor Authentication (MFA)",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "### How do I set up MFA?\n1. Go to **Settings > Security > Authentication**\n2. Click \"Enable MFA\"\n3. Choose your preferred method: authenticator app (Google Authenticator, Authy), SMS, or hardware key (YubiKey, FIDO2)\n4. Follow the setup instructions and enter the verification code to confirm\n\nAuthenticator apps and hardware keys are more secure than SMS and recommended for Owners and Admins.",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "### I lost access to my MFA device \u2014 how do I recover?\nIf you set up backup codes when you enabled MFA, use one of those to log in:\n1. On the MFA prompt, click \"Use a recovery code\"\n2. Enter one of your backup codes\n3. Once logged in, go to **Settings > Security** and reconfigure MFA with your new device",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "**No backup codes?** Contact support@stratifylabs.io from the email address on your account. We'll verify your identity and help you regain access. This process may take up to 1 business day for security reasons.",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "### My organization requires MFA but I can't complete setup\nIf your org admin has enforced MFA, you'll be prompted to set it up on your next login before you can access anything else. If you're stuck in the MFA setup flow, contact support@stratifylabs.io with your account email and we'll assist.\n\n---\n\n## Account Settings",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "### How do I change my email address?\n1. Log in and go to **Settings > Profile**\n2. Click \"Change Email\"\n3. Enter your new email address\n4. A verification link will be sent to the new address \u2014 click it to confirm the change\n\nYour old email address continues to work until you verify the new one.\n\n### How do I change my account name or display name?\nGo to **Settings > Profile** and update your name. Changes take effect immediately.",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "### How do I delete my account?\nBefore deleting your account, note that:\n- All your data, API keys, and settings will be permanently removed\n- If you're the Organization Owner, you must transfer ownership to another member first (or delete the entire organization)\n- Deletion cannot be undone\n\nTo delete your account, go to **Settings > Profile > Delete Account**. You'll be asked to confirm with your password.",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "If you're having trouble deleting your account, or if you're the last member of an organization and want to close everything, contact support@stratifylabs.io and we'll walk you through it.\n\n---\n\n## Team Invitations",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "### I can't accept my team invitation \u2014 what should I do?\nInvitation links expire after **7 days**. If your link has expired:\n1. Ask your team's Owner or Admin to resend the invitation from **Settings > Team**\n2. Check that you're opening the link in the same browser where you're not already logged in with a different account",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "If the link is still fresh and not working:\n- Try opening it in an incognito/private browser window\n- Make sure the email address on the invitation matches the one you're trying to sign up with\n\nIf you're still blocked, forward the invitation email to support@stratifylabs.io and we'll sort it out.",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "### I sent a team invitation but the person never received it\nAsk them to check their spam folder for an email from no-reply@stratifylabs.io. If it's not there, you can resend the invitation from **Settings > Team** \u2014 click the three-dot menu next to the pending invite and select \"Resend.\"",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "### How do I remove a team member?\nGo to **Settings > Team**, find the member you want to remove, click the three-dot menu, and select \"Remove.\" Their access is revoked immediately and their personal API keys are deactivated. Organization-level API keys are not affected.\n\n---\n\n## Still Need Help?",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "If you're locked out and can't access your settings at all, email support@stratifylabs.io directly. Include:\n- The email address on your account\n- A brief description of what you're experiencing\n- Whether your organization uses SSO\n\nWe'll get back to you as quickly as possible.",
+   "source": "account_and_login.md"
+  },
+  {
+   "text": "# Answer Quality and Tuning\n\n## Understanding How Answers Are Built\n\n### How does Stratify Labs produce an answer?\nEvery answer goes through two steps, often called RAG (retrieval-augmented generation):",
+   "source": "answer_quality_and_tuning.md"
+  },
+  {
+   "text": "1. **Retrieval** \u2014 your question is turned into a vector and compared with every chunk in the collection. The `top_k` most similar chunks are selected.\n2. **Generation** \u2014 those chunks and your question are sent to the answer model, which is instructed to answer **only** from the provided content and cite its sources.",
+   "source": "answer_quality_and_tuning.md"
+  },
+  {
+   "text": "When an answer is wrong, the cause is almost always in one of these two steps. Check retrieval first: if the right content never reached the model, no amount of prompt tuning will fix the answer.\n\n### How do I tell if a bad answer is a retrieval problem or a generation problem?\nLook at the `sources` in the response (or the **Sources** panel in the dashboard):",
+   "source": "answer_quality_and_tuning.md"
+  },
+  {
+   "text": "- **The right document isn't in the sources** \u2192 retrieval problem. Check that the content exists, check chunking, and try rephrasing.\n- **The right document is in the sources but the answer is still wrong** \u2192 generation problem. Check temperature, the custom instructions, and whether the chunk contains the complete answer or only part of it.\n\n---\n\n## Hallucinations",
+   "source": "answer_quality_and_tuning.md"
+  },
+  {
+   "text": "### The AI made up an answer that isn't in our documents \u2014 why? Common causes: 1. **High temperature** \u2014 values above 0.7 make answers more creative and less faithful to the source. Use 0.0\u20130.3 for support content. 2. **Low confidence threshold** \u2014 weakly related chunks are being passed to the model, and it tries to stitch an answer together from them. 3. **Custom instructions that encourage guessing** \u2014 phrases like \"always give the customer an answer\" override the grounding rules. 4. **Partial",
+   "source": "answer_quality_and_tuning.md"
+  },
+  {
+   "text": "content** \u2014 the chunk mentions a topic but not the specific answer, so the model fills the gap.",
+   "source": "answer_quality_and_tuning.md"
+  },
+  {
+   "text": "### How do I reduce hallucinations?\n- Keep temperature at **0.0\u20130.3**\n- Raise the **confidence threshold** so weak matches are dropped (see below)\n- Enable **Strict Grounding** at **Collections > Settings > Answer Behavior**. The model must cite a source for every claim, and answers without citations are replaced by your fallback message.\n- Write a clear fallback message, such as \"I couldn't find that in our help center \u2014 here's how to reach a person.\"\n\n---\n\n## Tuning Retrieval",
+   "source": "answer_quality_and_tuning.md"
+  },
+  {
+   "text": "### What is the confidence threshold and how do I set it?\nEvery retrieved chunk has a relevance score from 0 to 1. Chunks below the confidence threshold are discarded before generation. If nothing passes, the user gets your fallback message instead of a guess.\n\n- **Too high** (e.g., 0.90): the system says \"I don't know\" even when the answer exists.\n- **Too low** (e.g., 0.40): irrelevant content gets through and answers drift off-topic.",
+   "source": "answer_quality_and_tuning.md"
+  },
+  {
+   "text": "Start at **0.70**, then adjust using the **Retrieval Debugger** at **Collections > Debug**, which shows every chunk's score for a test question.\n\n### What chunk size should I use?\nChunk size controls how much text goes into each searchable piece.\n\n| Content type | Recommended chunk size |\n|--------------|-----------------------|\n| FAQs and short Q&A | 300\u2013500 characters |\n| How-to guides and runbooks | 800\u20131,200 characters |\n| Long policy or legal documents | 1,200\u20132,000 characters |",
+   "source": "answer_quality_and_tuning.md"
+  },
+  {
+   "text": "Chunks that are too small lose context (the answer gets split from its question). Chunks that are too large mix several topics, which lowers relevance scores. Changing chunk size requires re-indexing the collection.",
+   "source": "answer_quality_and_tuning.md"
+  },
+  {
+   "text": "### What is hybrid search?\nHybrid search combines semantic (meaning-based) search with keyword search. It helps when users search for exact terms that semantic search can miss, such as error codes (`ERR_4012`), product SKUs, or API parameter names. Enable it at **Collections > Settings > Search Mode > Hybrid** (Professional and Enterprise).",
+   "source": "answer_quality_and_tuning.md"
+  },
+  {
+   "text": "### What is reranking?\nReranking takes the top 20\u201350 retrieved chunks and re-scores them with a more precise model before choosing the final `top_k`. It typically improves answer accuracy by 10\u201320% on large or messy collections, at the cost of about 150 ms extra latency. Available on Professional and Enterprise.\n\n---\n\n## Measuring Quality",
+   "source": "answer_quality_and_tuning.md"
+  },
+  {
+   "text": "### How do I know if our answers are getting better or worse? Use three signals: 1. **User feedback** \u2014 thumbs up/down on answers, shown at **Analytics > Answer Feedback** 2. **\"I don't know\" rate** \u2014 the share of questions that hit the fallback message. A sudden jump often means content was deleted or a sync broke. 3. **An evaluation set** \u2014 30 to 100 real questions with known correct answers. Run it at **Collections > Evaluate** after every major content or settings change and compare the",
+   "source": "answer_quality_and_tuning.md"
+  },
+  {
+   "text": "score with the last run.\n\n### How do I find gaps in our knowledge base?\nGo to **Analytics > Unanswered Questions**. It groups questions that hit the fallback message by topic, sorted by volume. These are the articles you should write next. Many teams review this list weekly.",
+   "source": "answer_quality_and_tuning.md"
+  },
+  {
+   "text": "### Can I customize the tone and format of answers?\nYes. Add **Custom Instructions** at **Collections > Settings > Answer Behavior** \u2014 for example, \"Use a friendly tone, keep answers under 120 words, and use numbered steps for procedures.\" Custom instructions change style only. They cannot override the grounding rules, and the model will still refuse to answer from outside your content.",
+   "source": "answer_quality_and_tuning.md"
+  },
+  {
+   "text": "# API Reference Guide\n\n## Basics\n\n### What is the base URL for the Stratify Labs API?\nAll API requests go to:\n\n`https://api.stratifylabs.io/v1/{org}/`\n\nReplace `{org}` with your organization's slug, which you chose during signup. You can find it at **Settings > Organization**. EU-West customers use `https://eu.api.stratifylabs.io/v1/{org}/` instead \u2014 sending EU data to the US endpoint returns a **421 Misdirected Request** error.",
+   "source": "api_reference.md"
+  },
+  {
+   "text": "### How do I authenticate API requests?\nPass your API key in the `Authorization` header as a Bearer token:\n\n```\nAuthorization: Bearer ak_live_yourkey\n```\n\nNever send the key as a query parameter \u2014 keys in URLs end up in proxy and server logs. Requests without a valid key return **401 Unauthorized**.",
+   "source": "api_reference.md"
+  },
+  {
+   "text": "### Which API version should I use?\nThe current version is **v1**. We never make breaking changes inside a version. New optional fields and endpoints can be added at any time, so make sure your client ignores fields it doesn't recognize. When v2 ships, v1 will be supported for at least **12 months** after the v2 release date.\n\n---\n\n## Core Endpoints\n\n### What are the main endpoints?",
+   "source": "api_reference.md"
+  },
+  {
+   "text": "| Method | Endpoint | What it does | |--------|----------|--------------| | POST | `/query` | Ask a question and get an AI answer with sources | | POST | `/search` | Return matching chunks only \u2014 no AI-generated answer | | POST | `/collections/{name}/documents` | Upload or update a document | | GET | `/collections/{name}/documents/{id}` | Get a document and its ingestion status | | DELETE | `/collections/{name}/documents/{id}` | Delete a document and its embeddings | | GET | `/collections` |",
+   "source": "api_reference.md"
+  },
+  {
+   "text": "List collections | | GET | `/usage` | Current usage against your plan limits |\n\n### How do I send a query?\nSend a POST to `/query` with a JSON body:\n\n```json\n{\n  \"collection\": \"support-articles\",\n  \"question\": \"How do I reset my password?\",\n  \"top_k\": 5,\n  \"stream\": false\n}\n```\n\nThe response includes the `answer`, a `sources` list (document ID, title, and relevance score for each chunk used), `usage` (tokens consumed), and a `request_id`.",
+   "source": "api_reference.md"
+  },
+  {
+   "text": "### What's the difference between /query and /search?\n- **/query** retrieves the most relevant chunks and then generates a natural-language answer from them. It counts as 1 API request plus generation tokens.\n- **/search** only returns the matching chunks and their scores. It is faster (typically under 300ms) and cheaper, and is the right choice if you want to build your own answer UI or run your own LLM.",
+   "source": "api_reference.md"
+  },
+  {
+   "text": "### Can I stream answers?\nYes. Set `\"stream\": true` in your `/query` request. The API returns Server-Sent Events (SSE): one `token` event per piece of text, then a final `done` event containing sources and usage. Streaming doesn't make the full answer finish sooner, but users see the first words in under a second, which makes the experience feel much faster.\n\n---\n\n## Pagination, Request IDs and Idempotency",
+   "source": "api_reference.md"
+  },
+  {
+   "text": "### How does pagination work?\nList endpoints return up to 50 items by default (maximum 200, set with `limit`). If more results exist, the response includes a `next_cursor` value. Pass it as `cursor` on your next request. Cursors expire after 24 hours.",
+   "source": "api_reference.md"
+  },
+  {
+   "text": "### What is a request ID and why does support ask for it?\nEvery response includes an `X-Request-Id` header (for example, `req_8f2a1c9e`). It uniquely identifies that request in our logs. When you contact support about a failed or slow request, include the request ID and timestamp \u2014 it lets us find the exact request in seconds instead of searching by time window.",
+   "source": "api_reference.md"
+  },
+  {
+   "text": "### How do I avoid creating duplicate documents when I retry?\nSend an `Idempotency-Key` header (any unique string, such as a UUID) with POST requests. If you retry with the same key within 24 hours, we return the original response instead of processing the request again. This is especially important for document uploads in retry loops.\n\n---\n\n## Errors\n\n### What does an error response look like?\nAll errors use the same JSON format:",
+   "source": "api_reference.md"
+  },
+  {
+   "text": "```json\n{\n  \"error\": {\n    \"type\": \"rate_limit_error\",\n    \"code\": \"rate_limit_exceeded\",\n    \"message\": \"Rate limit of 60 requests/minute exceeded. Retry after 12 seconds.\",\n    \"request_id\": \"req_8f2a1c9e\"\n  }\n}\n```\n\n### Which errors should my code retry?",
+   "source": "api_reference.md"
+  },
+  {
+   "text": "| Status | Retry? | Notes | |--------|--------|-------| | 400 Bad Request | No | Fix the request body first | | 401 / 403 | No | Key or permission problem | | 404 Not Found | No | Check the collection name and document ID | | 409 Conflict | No | Document is still processing; wait, then send the update | | 413 Payload Too Large | No | File exceeds your plan's size limit | | 429 Too Many Requests | Yes | Wait for the `Retry-After` seconds | | 500 / 502 / 503 / 504 | Yes | Use exponential backoff",
+   "source": "api_reference.md"
+  },
+  {
+   "text": "with jitter |\n\nFor retryable errors, wait 1s, 2s, 4s, 8s (plus a random 0\u20131s of jitter) and stop after 5 attempts. Retrying immediately in a tight loop makes rate limiting worse and can extend an outage for everyone on your account.\n\n---\n\n## SDKs and Timeouts\n\n### Are there official SDKs?\nYes:\n- **Python**: `pip install stratifylabs`\n- **Node.js / TypeScript**: `npm install @stratifylabs/sdk`",
+   "source": "api_reference.md"
+  },
+  {
+   "text": "Both SDKs handle authentication, retries with backoff, pagination, and streaming for you. Community libraries exist for Go and Ruby but are not officially supported.\n\n### What timeout should I set on my client?\nWe recommend:\n- **/search**: 10 seconds\n- **/query** (non-streaming): 30 seconds\n- **/query** (streaming): 30 seconds to the first token, then no overall limit\n- **Document uploads**: 60 seconds",
+   "source": "api_reference.md"
+  },
+  {
+   "text": "The server-side limit for a single request is 60 seconds. Requests that run longer are cancelled and return **504 Gateway Timeout**.",
+   "source": "api_reference.md"
+  },
+  {
+   "text": "# Billing and Plans\n\n## Choosing the Right Plan\n\n### Which plan is right for me?\nHere's a quick breakdown to help you decide:",
+   "source": "billing_and_plans.md"
+  },
+  {
+   "text": "- **Free Trial** \u2014 Best if you're just exploring. 14 days, no credit card needed. Limited to 1,000 API requests/day and 1 collection. - **Starter ($49/month)** \u2014 Good for small teams or early-stage products. 50,000 API requests/day, 5 collections, email support. - **Professional ($199/month)** \u2014 For growing teams that need more scale, SSO, multi-region deployment, and faster support response. 500,000 API requests/day, unlimited collections. - **Enterprise (custom pricing)** \u2014 For large",
+   "source": "billing_and_plans.md"
+  },
+  {
+   "text": "organizations with compliance requirements, dedicated infrastructure, or high-volume needs. Includes SOC 2 Type II, HIPAA options, and a dedicated support engineer.\n\nNot sure? Email us at support@stratifylabs.io and we'll help you pick the right fit.\n\n### What's included in the Free Trial?\nThe free trial is 14 days with no credit card required. You get:\n- 1,000 API requests/day\n- 1 collection (up to 10,000 documents)\n- Community support",
+   "source": "billing_and_plans.md"
+  },
+  {
+   "text": "Your data is retained for 30 days after the trial ends. After that, it's permanently deleted unless you've upgraded to a paid plan.\n\n### Is there annual billing? Can I save money?\nYes. Annual billing is available for Starter and Professional plans at a 20% discount:\n- **Starter Annual**: $470/year (saves $118 vs. monthly)\n- **Professional Annual**: $1,910/year (saves $478 vs. monthly)\n\nTo switch to annual billing, go to **Settings > Billing** and select \"Switch to Annual.\"\n\n---",
+   "source": "billing_and_plans.md"
+  },
+  {
+   "text": "## Understanding Your Bill\n\n### What does my monthly charge include?\nYour invoice has two parts:\n\n1. **Base subscription** \u2014 the flat monthly fee for your plan\n2. **Usage-based charges** \u2014 anything you use beyond your plan's included limits\n\nUsage charges by plan:",
+   "source": "billing_and_plans.md"
+  },
+  {
+   "text": "| Resource | Starter | Professional | Enterprise |\n|----------|---------|-------------|------------|\n| Extra API requests | $0.002/request | $0.001/request | Custom |\n| Extra storage | $0.10/GB/month | $0.05/GB/month | Custom |\n| Embedding generation | $0.0001/document | $0.00005/document | Custom |\n| Priority processing | Not available | $0.005/request | Included |\n\nUsage charges are calculated daily and added to your monthly invoice.",
+   "source": "billing_and_plans.md"
+  },
+  {
+   "text": "### Where can I find my invoice?\nGo to **Settings > Billing > Invoice History**. Invoices are also emailed to the billing address on your account on your billing date each month.\n\nEach invoice shows:\n- Base subscription cost\n- Usage-based charges by resource type\n- Applicable taxes\n- Any credits or adjustments",
+   "source": "billing_and_plans.md"
+  },
+  {
+   "text": "### How do I update my billing email or payment method?\nGo to **Settings > Billing** to update your payment method or billing contact email. We accept:\n- Credit cards (Visa, Mastercard, American Express)\n- ACH bank transfers (US only \u2014 Starter and above)\n- Wire transfers (Enterprise, minimum $1,000)\n- Purchase orders (Enterprise only, NET 30 terms)\n\n### I was charged unexpectedly \u2014 what happened?\nUnexpected charges are usually caused by one of these:",
+   "source": "billing_and_plans.md"
+  },
+  {
+   "text": "1. **Usage overage** \u2014 You exceeded your plan's included API requests, storage, or document limit. Check **Settings > Billing > Usage** to see your usage breakdown.\n2. **Annual renewal** \u2014 If you're on an annual plan, you were charged the full year upfront on your renewal date.\n3. **Plan upgrade proration** \u2014 When you upgrade mid-cycle, you're charged a prorated amount for the remainder of the billing period.",
+   "source": "billing_and_plans.md"
+  },
+  {
+   "text": "If none of these explain the charge, contact support@stratifylabs.io with your invoice number and we'll look into it right away.\n\n### How do I set up usage alerts to avoid surprise charges?\nGo to **Settings > Billing > Alerts** and set thresholds at 50%, 75%, and 90% of your included limits. We'll email you when you approach those thresholds.\n\n---\n\n## Upgrading and Downgrading",
+   "source": "billing_and_plans.md"
+  },
+  {
+   "text": "### How do I upgrade my plan?\nGo to **Settings > Billing > Change Plan** and select the plan you want. Upgrades take effect immediately \u2014 you'll have access to higher limits and features right away. You'll be charged a prorated amount for the remainder of your current billing cycle.\n\n### How do I downgrade my plan?\nGo to **Settings > Billing > Change Plan** and select the lower tier. Downgrades take effect at the start of your next billing cycle \u2014 you keep current features until then.",
+   "source": "billing_and_plans.md"
+  },
+  {
+   "text": "**Important:** If your usage exceeds the lower tier's limits (for example, you have 8 collections but the Starter plan allows 5), you'll need to reduce your usage before the downgrade kicks in. Otherwise the system will block the downgrade until you're within limits.",
+   "source": "billing_and_plans.md"
+  },
+  {
+   "text": "### What happens to my data if I downgrade?\nYour data is safe. The downgrade only affects your limits going forward. You won't lose documents unless your collections or document count exceeds what the new plan allows \u2014 in that case, you'll be prompted to reduce usage before the change takes effect.\n\n---\n\n## Cancellation and Refunds\n\n### How do I cancel my subscription?\nYou can cancel anytime at **Settings > Billing > Cancel Subscription**. There are no cancellation fees. After you cancel:",
+   "source": "billing_and_plans.md"
+  },
+  {
+   "text": "- Your data is retained for **30 days** \u2014 you can export everything during this window\n- Your API keys are deactivated immediately\n- After 30 days, all data is permanently and irreversibly deleted\n\nIf you change your mind within the 30-day window, contact support@stratifylabs.io and we can reactivate your account.",
+   "source": "billing_and_plans.md"
+  },
+  {
+   "text": "### Can I get a refund?\n- **New customers**: Full refund within 7 days of your first subscription (one-time, for first-time customers only).\n- **Service outages**: Pro-rated refunds for outages that exceed your plan's SLA commitments.\n- **Usage charges**: No refunds for API requests, storage, or processing already consumed.\n- **Enterprise customers**: Refund terms are defined in your service agreement.",
+   "source": "billing_and_plans.md"
+  },
+  {
+   "text": "To request a refund, email support@stratifylabs.io with your account name and invoice number. We'll get back to you within 1 business day.\n\n### How do I export my data before canceling?\nGo to **Settings > Security > Data Export** to download all your organization's data in JSON format. We recommend doing this before your account is fully cancelled \u2014 exported data includes your documents, collections, and metadata.\n\n---\n\n## Taxes",
+   "source": "billing_and_plans.md"
+  },
+  {
+   "text": "### Do prices include taxes?\nNo \u2014 listed prices are exclusive of taxes. Applicable taxes (sales tax, VAT, GST) are calculated based on your billing address and added to your invoice.\n\nTo apply a tax exemption, upload your certificate at **Settings > Billing > Tax Info**.\n\nEU customers: VAT is applied based on your country of residence. If you have a valid VAT ID, add it to your billing settings to apply the reverse charge mechanism.",
+   "source": "billing_and_plans.md"
+  },
+  {
+   "text": "# Document Ingestion and Indexing\n\n## Limits and Formats\n\n### What are the file size and document limits?\n\n| Limit | Free Trial | Starter | Professional | Enterprise |\n|-------|-----------|---------|-------------|------------|\n| Max file size | 10 MB | 25 MB | 100 MB | 500 MB |\n| Documents per collection | 10,000 | 50,000 | 500,000 | Custom |\n| Collections | 1 | 5 | Unlimited | Unlimited |\n| Files per bulk upload | 50 | 200 | 1,000 | Custom |",
+   "source": "document_ingestion.md"
+  },
+  {
+   "text": "Files over your plan's size limit are rejected with **413 Payload Too Large**. Split large documents (for example, by chapter) before uploading.\n\n### Which file types are supported?\nText (.txt), Markdown (.md), PDF (.pdf, text-based only), HTML (.html), and CSV (.csv). Text must be UTF-8 encoded. For CSV files, each row is indexed as a separate document, and the first row must be a header row.\n\n---\n\n## Ingestion Status\n\n### What do the document statuses mean?",
+   "source": "document_ingestion.md"
+  },
+  {
+   "text": "| Status | Meaning |\n|--------|---------|\n| **Queued** | Upload received, waiting for a processing slot |\n| **Processing** | Text is being extracted, chunked, and embedded |\n| **Indexed** | Ready \u2014 the document is searchable |\n| **Partially indexed** | Some pages or rows failed; the rest are searchable |\n| **Failed** | Nothing was indexed; see the error message on the document |",
+   "source": "document_ingestion.md"
+  },
+  {
+   "text": "You can check status in the dashboard or with `GET /collections/{name}/documents/{id}`. You can also subscribe to the `document.indexed` and `document.failed` webhook events instead of polling.\n\n### My document has been stuck in \"Queued\" or \"Processing\" for a long time\nNormal processing takes 1\u20132 minutes per document. Large bulk uploads are processed in order, so the last files in a batch of 1,000 can take 20\u201330 minutes.",
+   "source": "document_ingestion.md"
+  },
+  {
+   "text": "1. Check **status.stratifylabs.io** for ingestion pipeline delays.\n2. Check the collection's queue depth at **Collections > (your collection) > Activity**.\n3. If a single document has been in **Processing** for more than 60 minutes while others finish, delete and re-upload it.\n\nIf it still doesn't complete, contact support@stratifylabs.io with the document ID.\n\n---\n\n## Common Ingestion Errors",
+   "source": "document_ingestion.md"
+  },
+  {
+   "text": "### My PDF failed with \"No extractable text\"\nThe PDF is a scanned image or a photo of a document, so there's no text layer to read. Run it through OCR software (most PDF editors have a \"Recognize Text\" option), save it, and upload again. To check, open the PDF and try to select a sentence \u2014 if you can't highlight the text, it needs OCR.",
+   "source": "document_ingestion.md"
+  },
+  {
+   "text": "### My PDF failed with \"Document is encrypted\"\nPassword-protected or permission-restricted PDFs can't be processed. Remove the password (File > Properties > Security in most PDF readers), save a new copy, and upload that.",
+   "source": "document_ingestion.md"
+  },
+  {
+   "text": "### I'm getting \"Invalid encoding\" errors on text or CSV files\nThe file isn't UTF-8. This is common with CSVs exported from older versions of Excel. Re-save the file as **CSV UTF-8** (Excel: File > Save As > CSV UTF-8), or convert it with a text editor that lets you choose the encoding.",
+   "source": "document_ingestion.md"
+  },
+  {
+   "text": "### My CSV was only partially indexed\nUsually caused by rows with a different number of columns than the header \u2014 often from unescaped commas or line breaks inside a field. Wrap fields that contain commas or line breaks in double quotes. The document's error details list the first 20 failing row numbers.",
+   "source": "document_ingestion.md"
+  },
+  {
+   "text": "### Tables in my PDF come out jumbled in answers\nPDF text extraction reads left to right, which can scramble multi-column layouts and complex tables. For table-heavy content, export the table as CSV or Markdown and upload it separately so each row stays intact.\n\n---\n\n## Updating and Deleting",
+   "source": "document_ingestion.md"
+  },
+  {
+   "text": "### How do I update a document that has changed?\nUpload it again with the **same document ID** (`PUT /collections/{name}/documents/{id}`, or **Replace** in the dashboard). The old chunks and embeddings are removed and the new version is indexed. Uploading under a new ID creates a duplicate, and both versions will appear in search results.",
+   "source": "document_ingestion.md"
+  },
+  {
+   "text": "### Why am I seeing old content in answers after I updated a document? 1. **It was uploaded as a new document** instead of replacing the old one \u2014 search the collection for the old title and delete the outdated copy. 2. **Re-indexing hasn't finished** \u2014 the old version stays searchable until the new one reaches **Indexed**. 3. **Answer Cache** \u2014 if enabled, cached answers expire within 60 minutes, or you can clear the cache at **Collections > Settings > Performance**. 4. **Synced source not",
+   "source": "document_ingestion.md"
+  },
+  {
+   "text": "updated** \u2014 for Zendesk or Confluence, the change appears after the next sync.\n\n### When I delete a document, is it removed immediately?\nThe document stops appearing in search results within **1 minute**. Its stored file, chunks, and embeddings are permanently deleted within **24 hours**, and removed from backups within 30 days, in line with our retention policy.",
+   "source": "document_ingestion.md"
+  },
+  {
+   "text": "### Does Stratify Labs detect duplicate documents?\nYes. Exact duplicates (identical content) in the same collection are skipped and the upload returns the existing document's ID. Near-duplicates (for example, the same article with a different footer) are flagged in **Collections > Content Health** so you can decide which version to keep.\n\n---\n\n## Metadata and Filtering",
+   "source": "document_ingestion.md"
+  },
+  {
+   "text": "### Can I add tags or metadata to documents?\nYes. Attach up to 20 key-value metadata fields per document, such as `{\"product\": \"billing\", \"audience\": \"admin\", \"language\": \"en\"}`. You can then filter searches by metadata, for example to only search admin docs for admin users. Metadata filters are applied before similarity search, so they also make queries faster.",
+   "source": "document_ingestion.md"
+  },
+  {
+   "text": "# Enterprise Onboarding and Go-Live\n\n## Onboarding Overview\n\n### What does Enterprise onboarding look like?\nEnterprise onboarding typically takes **4\u20136 weeks** and is led by your Technical Account Manager (TAM) together with a solutions engineer.",
+   "source": "enterprise_onboarding.md"
+  },
+  {
+   "text": "| Phase | Weeks | What happens |\n|-------|-------|--------------|\n| **Kickoff** | 1 | Confirm goals, success metrics, stakeholders, and timeline |\n| **Setup** | 1\u20132 | SSO, roles, data region, integrations, first collections |\n| **Content and tuning** | 2\u20134 | Ingest content, build an evaluation set, tune retrieval settings |\n| **Pilot** | 4\u20135 | Limited rollout to a pilot group, feedback, fixes |\n| **Go-live** | 5\u20136 | Production launch, monitoring, hypercare |",
+   "source": "enterprise_onboarding.md"
+  },
+  {
+   "text": "### Who should attend the kickoff call?\n- An **executive sponsor** who owns the business goal\n- A **technical owner** who will manage the integration and API keys\n- A **content owner** responsible for the knowledge base itself\n- A **security or IT contact** for SSO, IP allowlisting, and compliance review\n\nProjects that are missing a content owner are the most likely to stall, because answer quality depends on content more than on configuration.",
+   "source": "enterprise_onboarding.md"
+  },
+  {
+   "text": "### How do we define success?\nIn the kickoff we agree on 2\u20133 measurable success metrics, written into a shared **success plan**. Common examples:\n- **Ticket deflection**: 25% of incoming support questions answered without an agent\n- **Answer accuracy**: 85% or higher on your evaluation set\n- **Agent efficiency**: 20% reduction in average handle time with Zendesk Agent Assist\n- **Adoption**: 60% of the pilot group using the assistant weekly\n\n---\n\n## Setup Checklist",
+   "source": "enterprise_onboarding.md"
+  },
+  {
+   "text": "### What do we need to have ready before setup? 1. **SSO details** \u2014 your identity provider metadata URL (Okta, Azure AD, Google Workspace, and others are supported) 2. **Data region decision** \u2014 US-East or EU-West. This cannot be changed later without a migration. 3. **Content inventory** \u2014 where your knowledge lives (Zendesk, Confluence, file shares) and roughly how many documents 4. **Access model** \u2014 which teams should see which content; this decides your collection and role structure 5.",
+   "source": "enterprise_onboarding.md"
+  },
+  {
+   "text": "**Security review documents** \u2014 request our SOC 2 Type II report from security@stratifylabs.io (NDA required). HIPAA customers also need a signed BAA.\n\n### How should we structure our collections?\nGroup content by **who searches it**, not by where it came from. For example:\n- `customer-help` \u2014 public help articles for your customer-facing chatbot\n- `agent-internal` \u2014 internal macros and resolved tickets for support agents\n- `engineering-runbooks` \u2014 restricted to on-call engineers",
+   "source": "enterprise_onboarding.md"
+  },
+  {
+   "text": "Mixing internal and customer-facing content in one collection is the most common onboarding mistake. It risks internal notes appearing in customer answers.\n\n---\n\n## Pilot and Go-Live",
+   "source": "enterprise_onboarding.md"
+  },
+  {
+   "text": "### How do we run a good pilot?\n- Choose a pilot group of **20\u201350 real users** who ask real questions daily\n- Run for at least **2 weeks** so you see a realistic range of questions\n- Review **Analytics > Unanswered Questions** and thumbs-down feedback twice a week with your TAM\n- Fix content gaps first, then tune settings",
+   "source": "enterprise_onboarding.md"
+  },
+  {
+   "text": "### What is the go-live readiness checklist? - Evaluation set accuracy meets the target in the success plan - Fallback message reviewed and approved (and it routes users to a human) - Production keys (`ak_live_`) created and stored in a secrets manager, test keys removed from production code - Retry logic with exponential backoff and client timeouts in place - Monitoring and alerting set up on error rate and p95 latency - Status page subscription set up for your on-call team - Support escalation",
+   "source": "enterprise_onboarding.md"
+  },
+  {
+   "text": "path shared with your team (see Support Policy) - TAM notified of launch date and expected traffic at least 5 business days ahead\n\n### What is hypercare?\nFor the first **2 weeks after go-live**, your account is in hypercare: your TAM and support engineer monitor your error rates, latency, and unanswered-question trends daily and reach out proactively if anything looks off. Hypercare ends with a go-live retrospective.\n\n---\n\n## Ongoing Relationship",
+   "source": "enterprise_onboarding.md"
+  },
+  {
+   "text": "### What happens in a Quarterly Business Review (QBR)?\nEach quarter your TAM walks through:\n- Progress against the success plan metrics\n- Usage trends and cost forecast against your contract\n- Incidents and support tickets from the quarter, with any RCAs\n- Upcoming product changes and model deprecations that affect you\n- Recommendations \u2014 new use cases, content gaps, or settings changes\n\nQBRs are the right place to raise roadmap requests and renewal planning.",
+   "source": "enterprise_onboarding.md"
+  },
+  {
+   "text": "### What is an account health check?\nTwice a year (or on request) your TAM runs a configuration review covering key hygiene (old or unused keys), role assignments, integration sync health, retrieval settings, and content freshness. You get a short report with prioritized recommendations.\n\n### Who do I contact for what after onboarding?",
+   "source": "enterprise_onboarding.md"
+  },
+  {
+   "text": "| Need | Contact |\n|------|---------|\n| Production issue or error | Dedicated support engineer / support@stratifylabs.io |\n| Sev 1 outage | 24/7 Enterprise phone line |\n| Architecture or best-practice advice | Your TAM |\n| Contract, billing, or seat changes | Your account executive / billing@stratifylabs.io |\n| Security questionnaire or SOC 2 report | security@stratifylabs.io |",
+   "source": "enterprise_onboarding.md"
+  },
+  {
+   "text": "# Frequently Asked Questions\n\n## About Stratify Labs\n\n### 1. What is Stratify Labs?\nStratify Labs is an AI-powered knowledge base platform. You upload your documents \u2014 support articles, internal wikis, product guides, resolved tickets \u2014 and Stratify Labs makes that content searchable using AI. Instead of keyword matching, it understands the meaning of questions and returns the most relevant answers from your content.",
+   "source": "faq.md"
+  },
+  {
+   "text": "Teams use it to power customer-facing chatbots, internal knowledge assistants, and support agent tools.\n\n### 2. How is Stratify Labs different from a regular search engine?\nTraditional search engines match keywords. If you search for \"can't log in\" and your article says \"account access issues,\" keyword search might miss it.",
+   "source": "faq.md"
+  },
+  {
+   "text": "Stratify Labs uses semantic search \u2014 it understands that \"can't log in\" and \"account access issues\" are related concepts and returns the right content either way. It's also designed to pull the specific, relevant chunk of a document rather than returning the whole page.\n\n### 3. Do you store my documents permanently?\nYour documents are stored as long as your account is active. You can delete individual documents or entire collections at any time.",
+   "source": "faq.md"
+  },
+  {
+   "text": "If you cancel your account, your data is retained for 30 days so you have time to export it. After 30 days, everything is permanently deleted.\n\n---\n\n## Features and Capabilities\n\n### 4. What file types are supported?\nStratify Labs supports:\n- Plain text (.txt)\n- Markdown (.md)\n- PDF (.pdf) \u2014 text-based PDFs only; scanned/image PDFs are not supported\n- HTML (.html)\n- CSV (.csv) \u2014 each row is indexed as a separate document",
+   "source": "faq.md"
+  },
+  {
+   "text": "If you have documents in a format not listed here, contact support@stratifylabs.io and we'll let you know if we can support it.\n\n### 5. Can I use Stratify Labs for internal company knowledge?\nAbsolutely \u2014 this is one of the most common use cases. Teams use it to index internal wikis, runbooks, HR policies, product documentation, and engineering specs. You can connect it directly to Confluence, or upload documents manually.",
+   "source": "faq.md"
+  },
+  {
+   "text": "Permissions can be scoped so different teams only see content relevant to them.\n\n### 6. How accurate are the answers?\nAccuracy depends on the quality and coverage of your knowledge base. If your documents contain clear, well-written answers, Stratify Labs will return them accurately. If your KB has gaps, the system will tell the user it doesn't know rather than guessing.",
+   "source": "faq.md"
+  },
+  {
+   "text": "You can improve accuracy by:\n- Adding more relevant documents\n- Writing content clearly and directly\n- Using Q&A format in source documents when possible\n\n### 7. What happens if the AI doesn't know the answer?\nIf no content in your knowledge base meets the confidence threshold for a query, the system returns a \"I don't have enough information to answer that\" response rather than making something up.",
+   "source": "faq.md"
+  },
+  {
+   "text": "You can configure a custom fallback message that directs users to human support or other resources.\n\n---\n\n## Pricing and Trial\n\n### 8. Is there a free trial?\nYes \u2014 the free trial is 14 days with no credit card required. You get:\n- 1,000 API requests per day\n- 1 collection (up to 10,000 documents)\n- Community support\n\nAfter the trial ends, you can upgrade to a paid plan or your data will be kept for 30 days before being deleted.",
+   "source": "faq.md"
+  },
+  {
+   "text": "### 9. What plans are available?\n- **Free Trial** \u2014 14 days, no credit card\n- **Starter** \u2014 $49/month\n- **Professional** \u2014 $199/month\n- **Enterprise** \u2014 Custom pricing\n\nSee the full plan comparison and feature details in the Billing and Plans section, or visit dashboard.stratifylabs.io.\n\n---\n\n## Data and Privacy",
+   "source": "faq.md"
+  },
+  {
+   "text": "### 10. Where is my data stored?\nBy default, data is stored in US-East AWS data centers. Professional and Enterprise customers can choose EU-West (Ireland) as their data region. Enterprise customers have additional options for global deployment and custom data residency.\n\nAll data is encrypted at rest (AES-256-GCM) and in transit (TLS 1.3).",
+   "source": "faq.md"
+  },
+  {
+   "text": "### 11. Can I use my own embedding model or OpenAI API key?\nEnterprise plans support bring-your-own-model (BYOM) configurations, including using your own OpenAI API key or a self-hosted embedding model. Contact support@stratifylabs.io to discuss setup for your use case.\n\n### 12. How do I export my data?\nGo to **Settings > Security > Data Export** to download all your organization's data in JSON format. This includes your documents, collection metadata, and settings.",
+   "source": "faq.md"
+  },
+  {
+   "text": "We recommend exporting before canceling your account since data is permanently deleted 30 days after cancellation.\n\n---\n\n## Technical and Integration\n\n### 13. What languages are supported?\nStratify Labs supports multilingual search \u2014 you can index and query documents in most major languages including English, Spanish, French, German, Portuguese, Japanese, Chinese (simplified and traditional), and more.",
+   "source": "faq.md"
+  },
+  {
+   "text": "For best results, keep query language consistent with document language (e.g., search in Spanish if your documents are in Spanish).\n\n### 14. What is your uptime SLA?\nUptime commitments by plan:\n- **Starter**: 99.5% uptime\n- **Professional**: 99.9% uptime\n- **Enterprise**: 99.99% uptime\n\nCheck current platform status at status.stratifylabs.io. During incidents, we post updates every 2 hours and publish a post-incident report within 5 business days.\n\n---\n\n## Getting Support",
+   "source": "faq.md"
+  },
+  {
+   "text": "### 15. How do I talk to a human support agent?\nYou can reach us at:\n\n- **Email**: support@stratifylabs.io (response times vary by plan \u2014 see below)\n- **Live chat**: Available in your dashboard for Professional and Enterprise customers",
+   "source": "faq.md"
+  },
+  {
+   "text": "Response time by plan:\n- **Free Trial / Community**: Community forums, best effort\n- **Starter**: Email support, 48-hour response time\n- **Professional**: Priority email and chat, 4-hour response time\n- **Enterprise**: Dedicated support engineer, 1-hour response time\n\nWhen contacting support, please include your organization name, a description of the issue, and any relevant error messages or screenshots. The more detail you provide, the faster we can help.",
+   "source": "faq.md"
+  },
+  {
+   "text": "# Getting Started with Stratify Labs\n\n## Account Setup\n\n### How do I create a Stratify Labs account?\nVisit dashboard.stratifylabs.io and click \"Start Free Trial.\" You'll need a valid business email address. Personal email domains (gmail.com, yahoo.com, etc.) are not accepted for enterprise accounts. After submitting, you'll receive a verification email within 5 minutes.",
+   "source": "getting_started.md"
+  },
+  {
+   "text": "### I didn't receive my verification email \u2014 what do I do?\nFirst, check your spam or junk folder. If it's not there, wait a few minutes and try again. Still nothing? Contact us at support@stratifylabs.io and we'll resend it or verify your account manually.",
+   "source": "getting_started.md"
+  },
+  {
+   "text": "### How do I set up my organization?\nAfter verifying your email, you'll be prompted to create your organization. Choose your organization name carefully \u2014 it becomes part of your API endpoint and cannot be changed later without contacting support. If you need to rename your org, reach out to support@stratifylabs.io.\n\n### How do I invite my team?\nGo to **Settings > Team** and enter their email addresses. Team members receive an invitation email with a link to join. There are three roles:",
+   "source": "getting_started.md"
+  },
+  {
+   "text": "- **Owner** \u2014 Full access including billing, API key management, and member management. Only one owner per organization.\n- **Admin** \u2014 Can manage API keys, configure integrations, and view all analytics. Cannot modify billing or transfer ownership.\n- **Member** \u2014 Can use the platform and generate personal API keys. Cannot access organization-wide settings.\n\n---\n\n## API Keys\n\n### What are the different API key types?\nEvery API key has a prefix that tells you what it's for:",
+   "source": "getting_started.md"
+  },
+  {
+   "text": "- `ak_live_` \u2014 Production keys. These count toward your usage limits.\n- `ak_test_` \u2014 Sandbox keys for development and testing. They do **not** count toward your usage limits.\n- `ak_readonly_` \u2014 Read-only keys for analytics and monitoring dashboards.\n\nUse test keys when building and testing so you don't burn through your plan's limits.",
+   "source": "getting_started.md"
+  },
+  {
+   "text": "### How do I create or rotate an API key?\nGo to **Settings > API Keys** and click \"Create New Key.\" To rotate an existing key, click the key and select \"Rotate.\" The old key stays valid for 24 hours so you have time to update your integrations. If you think a key was compromised, you can expire it immediately.\n\n### My API key isn't working \u2014 what should I check?\nA few common reasons an API key stops working:",
+   "source": "getting_started.md"
+  },
+  {
+   "text": "1. **Wrong key type** \u2014 Test keys (`ak_test_`) only work in the sandbox environment. Make sure you're using a live key (`ak_live_`) for production requests. 2. **Key was rotated or revoked** \u2014 Check Settings > API Keys to see if the key is still active. 3. **Key was detected in a public repo** \u2014 If we detect your key in a public GitHub repository, we automatically revoke it and notify the account owner. Check your email for a notification. 4. **Permissions** \u2014 If you're using a read-only key",
+   "source": "getting_started.md"
+  },
+  {
+   "text": "(`ak_readonly_`), it can't make write requests.\n\nIf none of those apply, contact support@stratifylabs.io with the key prefix (not the full key) and we'll investigate.\n\n### How do I keep my API key secure?\nNever paste your API key directly into code or commit it to version control. Store it as an environment variable or use a secrets manager. We automatically revoke keys found in public GitHub repositories.\n\n---\n\n## Rate Limits\n\n### What are my rate limits?\nYour rate limits depend on your plan:",
+   "source": "getting_started.md"
+  },
+  {
+   "text": "| Plan | Requests/minute | Requests/day | Concurrent connections |\n|------|-----------------|--------------|----------------------|\n| Free Trial | 10 | 1,000 | 2 |\n| Starter | 60 | 50,000 | 10 |\n| Professional | 300 | 500,000 | 50 |\n| Enterprise | Custom | Custom | Custom |\n\n### I'm hitting rate limits \u2014 what should I do?\nWhen you hit a rate limit, you'll get an HTTP **429 Too Many Requests** error. Here's what to do:",
+   "source": "getting_started.md"
+  },
+  {
+   "text": "1. **Wait before retrying** \u2014 The response includes a `Retry-After` header telling you how many seconds to wait.\n2. **Check your usage** \u2014 Go to Settings > Billing > Usage to see how close you are to your daily limit.\n3. **Use test keys for development** \u2014 Test API keys don't count toward your limits.\n4. **Consider upgrading** \u2014 If you're regularly hitting limits, it may be time to move to a higher plan. You can upgrade anytime from Settings > Billing.",
+   "source": "getting_started.md"
+  },
+  {
+   "text": "If you're on Enterprise and hitting custom limits, contact your dedicated support engineer.\n\n---\n\n## Uploading and Ingesting Documents\n\n### What file types can I upload?\nStratify Labs supports these file formats:\n- Plain text (.txt)\n- Markdown (.md)\n- PDF (.pdf) \u2014 text is extracted; scanned/image-only PDFs are not supported\n- HTML (.html) \u2014 HTML tags are automatically stripped\n- CSV (.csv) \u2014 each row is treated as a separate document",
+   "source": "getting_started.md"
+  },
+  {
+   "text": "### How do I upload documents to the platform?\nYou can upload documents directly from the **Collections** section of your dashboard:\n1. Go to your dashboard at dashboard.stratifylabs.io\n2. Open or create a Collection\n3. Click \"Upload Documents\" and select your files\n4. Wait for processing \u2014 you'll see a confirmation once documents are indexed",
+   "source": "getting_started.md"
+  },
+  {
+   "text": "### How long does it take for uploaded documents to be searchable?\nMost documents are indexed within 1\u20132 minutes. The first query after a new upload may take a few extra seconds while embeddings are being generated. After that, responses should come back in under 500ms.\n\n### Why is my first query slow after uploading?\nThis is normal. The first query after ingesting new documents may take 2\u20135 seconds while embeddings are being generated in the background. Subsequent queries will be fast.\n\n---",
+   "source": "getting_started.md"
+  },
+  {
+   "text": "## Still Need Help?\n\nIf you've gone through these steps and are still stuck, we're happy to help. Reach out at **support@stratifylabs.io** and include:\n- Your organization name\n- The API key prefix (first 10 characters only \u2014 never the full key)\n- The exact error message you're seeing\n- What you were trying to do when the error occurred",
+   "source": "getting_started.md"
+  },
+  {
+   "text": "# Integrations\n\n## Overview\n\nStratify Labs connects with the tools your team already uses \u2014 Slack, Zendesk, and Confluence \u2014 to automatically sync knowledge and deliver answers where work happens. All integrations are configured from **Settings > Integrations** in your dashboard at dashboard.stratifylabs.io.\n\n---\n\n## Slack Integration",
+   "source": "integrations.md"
+  },
+  {
+   "text": "### How do I connect Stratify Labs to Slack?\n1. Go to **Settings > Integrations > Slack**\n2. Click \"Add to Slack\" and authorize Stratify Labs in your workspace\n3. Choose which channels the bot is allowed to respond in\n4. Select which collections it should search when answering questions\n\nOnce connected, you can mention `@Stratify Labs` in any authorized channel to ask a question.\n\n### My Slack bot isn't responding \u2014 what should I check?\nA few common reasons the bot goes quiet:",
+   "source": "integrations.md"
+  },
+  {
+   "text": "1. **Channel not in the allowlist** \u2014 The bot only responds in channels you've explicitly enabled. Go to Settings > Integrations > Slack and check the channel list. 2. **API key was rotated** \u2014 If you recently rotated your API key, the Slack integration needs to be re-authorized. Go to Settings > Integrations > Slack and click \"Reconnect.\" 3. **Confidence threshold too high** \u2014 If the bot can't find an answer above your confidence threshold, it stays silent. Lower the threshold or check that",
+   "source": "integrations.md"
+  },
+  {
+   "text": "your knowledge base has relevant content. 4. **Bot was removed from the channel** \u2014 Re-invite the bot with `/invite @Stratify Labs`.\n\nIf the bot is still not responding after checking these, contact support@stratifylabs.io.\n\n### The Slack bot is responding twice to the same message\nThis usually happens when the bot is installed in multiple Slack workspaces that both point to the same Stratify Labs organization. Go to Settings > Integrations > Slack and remove any duplicate workspace connections.",
+   "source": "integrations.md"
+  },
+  {
+   "text": "### Why does the Slack bot say \"thinking...\" before answering?\nSlack requires an initial acknowledgment within 3 seconds. If your knowledge base is large, the search takes longer, so the bot sends a \"thinking\u2026\" message first and then updates it with the actual answer. This is normal behavior.",
+   "source": "integrations.md"
+  },
+  {
+   "text": "### Can the bot answer automatically without being mentioned?\nYes \u2014 enable \"Auto-respond\" in **Settings > Integrations > Slack > Configuration**. When on, the bot uses AI to detect questions in designated channels and responds without being mentioned. You can set a confidence threshold so it only responds when it's reasonably confident in the answer.\n\n---\n\n## Zendesk Integration",
+   "source": "integrations.md"
+  },
+  {
+   "text": "### How do I connect Zendesk?\n1. Go to **Settings > Integrations > Zendesk**\n2. Enter your Zendesk subdomain (e.g., yourcompany.zendesk.com)\n3. Authenticate with a Zendesk admin account\n4. Choose your sync direction: one-way (Zendesk \u2192 Stratify Labs) or two-way\n\n### My Help Center articles aren't syncing from Zendesk \u2014 what's wrong?\nThe most common causes:",
+   "source": "integrations.md"
+  },
+  {
+   "text": "1. **Article is still in draft** \u2014 Only published articles are synced. Publish the article in Zendesk and it will sync within 15 minutes.\n2. **API token expired** \u2014 Zendesk API tokens can expire. Go to Settings > Integrations > Zendesk and reconnect with a fresh token.\n3. **Sync is behind** \u2014 The default sync runs every 15 minutes. If you just published an article, wait a few minutes and check again.",
+   "source": "integrations.md"
+  },
+  {
+   "text": "If articles are still missing after 30 minutes, contact support@stratifylabs.io with the article URL.\n\n### I see customer PII in synced Zendesk tickets \u2014 how do I fix this?\nBy default, the PII redaction engine removes emails, phone numbers, and names from synced tickets. If you're seeing other types of sensitive data (like account numbers or custom identifiers), you can add custom redaction rules at **Settings > Integrations > Zendesk > PII Rules** using regex patterns.",
+   "source": "integrations.md"
+  },
+  {
+   "text": "### How does the Zendesk Agent Assist feature work?\nWhen two-way sync is enabled, Stratify Labs adds a sidebar to the Zendesk agent interface:\n1. An agent opens a ticket\n2. The Stratify Labs sidebar shows the top 3 relevant answers from your knowledge base\n3. The agent can insert a suggestion directly into their reply with one click\n\nUsage analytics track which suggestions are used vs. ignored to help you improve your KB over time.",
+   "source": "integrations.md"
+  },
+  {
+   "text": "### What sync options are available for Zendesk?\n- **Articles** \u2014 Syncs Help Center articles to a collection (every 15 minutes by default)\n- **Tickets** \u2014 Syncs resolved tickets with PII redacted. Only tickets tagged \"knowledge-base\" are included.\n- **Macros** \u2014 Syncs agent macros as knowledge snippets\n\nEnterprise plans support real-time sync via webhooks instead of the 15-minute polling interval.\n\n---\n\n## Confluence Integration",
+   "source": "integrations.md"
+  },
+  {
+   "text": "### How do I connect Confluence?\n1. Go to **Settings > Integrations > Confluence**\n2. Select \"Confluence Cloud\" or \"Confluence Server/Data Center\"\n3. For Cloud: click \"Authorize with OAuth\"\n4. For Server: enter your Confluence base URL and a personal access token\n5. Select which spaces you want to sync",
+   "source": "integrations.md"
+  },
+  {
+   "text": "### My Confluence pages aren't showing up in search results \u2014 what should I check? 1. **Space not selected** \u2014 Only spaces you explicitly selected during setup are synced. Go to Settings > Integrations > Confluence and verify your space list. 2. **Page was just created or edited** \u2014 Sync runs every 30 minutes by default. Wait up to 30 minutes after a page is saved. 3. **Page is restricted** \u2014 If a page has view restrictions in Confluence, it will only appear in Stratify Labs search results for",
+   "source": "integrations.md"
+  },
+  {
+   "text": "users who also have access in Confluence (requires \"Permission Sync\" to be enabled \u2014 available on Professional and Enterprise plans). 4. **Attachment-only pages** \u2014 Pages without body text may not index well. Make sure the page has visible text content.",
+   "source": "integrations.md"
+  },
+  {
+   "text": "### Does Stratify Labs respect Confluence permissions?\nYes, on Professional and Enterprise plans with \"Permission Sync\" enabled. If a user doesn't have access to a Confluence space, results from that space are filtered out of their search results. This requires the Confluence integration to have permission-aware access.\n\n### How often do Confluence pages sync?\n- **Starter**: every 30 minutes\n- **Professional**: every 15 minutes\n- **Enterprise**: every 5 minutes or real-time (configurable)",
+   "source": "integrations.md"
+  },
+  {
+   "text": "Deleted pages are removed from Stratify Labs within 1 hour of deletion in Confluence.\n\n---\n\n## Webhooks and Custom Integrations\n\n### Can I connect Stratify Labs to a custom tool?\nYes. You can use inbound webhooks to push documents from any system into Stratify Labs. Go to **Settings > Integrations > Webhooks > Add Endpoint** and follow the setup instructions.",
+   "source": "integrations.md"
+  },
+  {
+   "text": "You can also configure outbound webhooks to get notified when events happen in Stratify Labs \u2014 for example, when a query completes, a document is ingested, or a usage alert fires.\n\n### How do I verify webhook deliveries are genuine?\nEvery webhook request includes an HMAC-SHA256 signature in the `X-Stratify-Signature` header. Verify this against your webhook secret to confirm the request came from Stratify Labs. Details are in the developer documentation.\n\n---\n\n## Integration Limits by Plan",
+   "source": "integrations.md"
+  },
+  {
+   "text": "| Integration | Starter | Professional | Enterprise |\n|------------|---------|-------------|------------|\n| Slack workspaces | 1 | 3 | Unlimited |\n| Zendesk instances | 1 | 2 | Unlimited |\n| Confluence spaces | 5 | 25 | Unlimited |\n| Webhook endpoints | 3 | 10 | Unlimited |\n| Sync frequency | 30 min | 15 min | 5 min / real-time |\n\nNeed a limit increased? Contact support@stratifylabs.io.",
+   "source": "integrations.md"
+  },
+  {
+   "text": "# AI Models, Upgrades and Deprecations\n\n## Models We Use\n\n### Which AI models power Stratify Labs?\nStratify Labs uses two kinds of models:",
+   "source": "models_and_deprecations.md"
+  },
+  {
+   "text": "- **Answer models** generate the natural-language answer from your retrieved content. You can choose between **Fast** (lowest latency and cost, the default) and **Advanced** (better reasoning on complex, multi-step questions, roughly 3x the generation cost).\n- **Embedding models** turn your documents and queries into vectors for semantic search. Every collection is tied to one embedding model version, shown at **Collections > (your collection) > Settings > Embedding Model**.",
+   "source": "models_and_deprecations.md"
+  },
+  {
+   "text": "Enterprise customers can bring their own model (BYOM) \u2014 see the FAQ for details.\n\n### How do I change the answer model?\nSet it per collection at **Collections > Settings > Answer Model**, or per request by passing `\"model\": \"advanced\"` in the `/query` body. A per-request setting overrides the collection default. Changing the answer model does not require re-indexing.\n\n---\n\n## Deprecation Policy",
+   "source": "models_and_deprecations.md"
+  },
+  {
+   "text": "### How much notice do you give before retiring a model?\n- **Answer models**: at least **90 days** notice before retirement.\n- **Embedding models**: at least **6 months** notice, because switching requires re-indexing your content.\n\nNotices go to the account Owner and all Admins by email, appear as a banner in the dashboard, and are listed at status.stratifylabs.io/deprecations. Enterprise customers are also contacted directly by their dedicated support engineer.",
+   "source": "models_and_deprecations.md"
+  },
+  {
+   "text": "### What happens on the retirement date if I haven't migrated?\nFor answer models, requests that name the retired model are automatically routed to its listed replacement, and the response includes a `X-Stratify-Model-Redirect` header so you can detect it. You will not get errors, but answers may read differently.",
+   "source": "models_and_deprecations.md"
+  },
+  {
+   "text": "For embedding models, collections that haven't been re-indexed by the retirement date are switched to **read-only**: search keeps working on existing content, but new uploads fail with a **409 Conflict** error until you re-index.",
+   "source": "models_and_deprecations.md"
+  },
+  {
+   "text": "### What is model pinning?\nPinning locks a collection to a specific model version (for example, `fast-2026-03`) instead of the moving alias (`fast`). The alias is upgraded automatically when we release improvements; a pinned version is not. Pin a version if you have automated tests or compliance review that depend on consistent wording. Pinned versions are still subject to the deprecation policy above.\n\n---\n\n## Migrating",
+   "source": "models_and_deprecations.md"
+  },
+  {
+   "text": "### How do I re-index a collection onto a new embedding model?\n1. Go to **Collections > (your collection) > Settings > Embedding Model**\n2. Select the new model and click **Start Re-index**\n3. A shadow copy of the index is built in the background. Search keeps using the old index until the new one is complete, so there is no downtime.\n4. When it finishes, compare results in the **Preview** tab, then click **Promote**.",
+   "source": "models_and_deprecations.md"
+  },
+  {
+   "text": "Re-indexing time depends on collection size \u2014 roughly 10 minutes per 10,000 documents. Embedding generation for re-indexing is billed at the normal per-document rate, except during the final 30 days before a forced retirement, when it is free.\n\n### Can I roll back after promoting a new embedding model?\nYes, for **7 days**. The previous index is kept and can be restored from **Collections > Settings > Index History**. After 7 days it is deleted.",
+   "source": "models_and_deprecations.md"
+  },
+  {
+   "text": "### Why can't I mix embedding models in one collection?\nVectors from different embedding models live in different mathematical spaces, so comparing them gives meaningless similarity scores. If a query is embedded with one model and documents with another, search returns confidently wrong results. This is why the whole collection must be re-indexed together.\n\n---\n\n## Troubleshooting After a Model Change",
+   "source": "models_and_deprecations.md"
+  },
+  {
+   "text": "### Answers changed after a model upgrade \u2014 is this a bug?\nUsually not. New answer models can phrase things differently, give longer or shorter answers, or cite different chunks even with the same content. To check:",
+   "source": "models_and_deprecations.md"
+  },
+  {
+   "text": "1. Look at the `model` field in the API response to confirm which version answered.\n2. Compare the `sources` list from before and after. If the sources are the same and only the wording changed, it's the new model's style.\n3. If you need the old behavior, pin the previous version while you adjust your prompts or tests.",
+   "source": "models_and_deprecations.md"
+  },
+  {
+   "text": "If the sources themselves changed after an **embedding** migration, or answer quality dropped noticeably, contact support@stratifylabs.io with example queries and the before/after request IDs.",
+   "source": "models_and_deprecations.md"
+  },
+  {
+   "text": "### Search quality dropped right after re-indexing \u2014 what should I check? 1. **Confidence threshold** \u2014 new embedding models often produce scores on a different scale. A threshold tuned for the old model (for example, 0.80) may now filter out good results. Re-tune it using the Preview tab. 2. **Partial re-index** \u2014 check that the re-index status is \"Complete\" and the document count matches the old index. 3. **Custom integrations caching vectors** \u2014 if your own system stores query embeddings, it",
+   "source": "models_and_deprecations.md"
+  },
+  {
+   "text": "must switch to the new model at the same time.\n\n### How do I test a new model before it becomes the default?\nEvery new model is available as a **preview** for at least 30 days before we move the default alias. Pass `\"model\": \"fast-preview\"` on individual requests, or create a test collection pinned to the preview version and run your evaluation set against it.",
+   "source": "models_and_deprecations.md"
+  },
+  {
+   "text": "# Performance, Latency and Reliability\n\n## What Normal Looks Like\n\n### How fast should Stratify Labs respond?\nTypical latency for a collection under 100,000 documents, measured inside the same region:\n\n| Endpoint | p50 (median) | p95 |\n|----------|--------------|-----|\n| `/search` | 150 ms | 400 ms |\n| `/query` (first token, streaming) | 600 ms | 1.2 s |\n| `/query` (full answer, non-streaming) | 2.0 s | 4.5 s |\n| Document upload accepted | 200 ms | 500 ms |",
+   "source": "performance_and_latency.md"
+  },
+  {
+   "text": "Most of a `/query` request's time is spent generating the answer, not searching. That's why streaming makes the biggest difference to how fast your app feels.\n\n### What do p50 and p95 mean?\n- **p50 (median)**: half of requests are faster than this.\n- **p95**: 95% of requests are faster than this; 1 in 20 is slower.",
+   "source": "performance_and_latency.md"
+  },
+  {
+   "text": "Averages hide slow outliers, so we report percentiles. If your p95 is much higher than the numbers above, some of your users are having a slow experience even if the average looks fine.",
+   "source": "performance_and_latency.md"
+  },
+  {
+   "text": "### How can I see where the time is going?\nEvery `/query` response includes timing headers:\n- `X-Stratify-Retrieval-Ms` \u2014 time spent embedding the query and searching\n- `X-Stratify-Generation-Ms` \u2014 time spent generating the answer\n- `X-Stratify-Queue-Ms` \u2014 time the request waited because you were at your concurrency limit",
+   "source": "performance_and_latency.md"
+  },
+  {
+   "text": "If `Queue-Ms` is high, you're hitting your concurrent connection limit. If `Retrieval-Ms` is high, look at collection size and `top_k`. If `Generation-Ms` is high, look at answer length and model choice.\n\n---\n\n## Making It Faster",
+   "source": "performance_and_latency.md"
+  },
+  {
+   "text": "### What are the quickest ways to reduce latency? 1. **Stream answers** (`\"stream\": true`) so users see text in under a second. 2. **Use /search instead of /query** when you don't need an AI-written answer. 3. **Query a specific collection** rather than searching across all of them. 4. **Keep top_k small** \u2014 3 to 5 chunks is usually enough. Each extra chunk adds input tokens and generation time. 5. **Use the Fast answer model** unless you need Advanced reasoning. 6. **Reuse HTTP connections** \u2014",
+   "source": "performance_and_latency.md"
+  },
+  {
+   "text": "create one API client and reuse it. Opening a new TLS connection for every request adds 100\u2013300 ms. 7. **Deploy close to your data region** \u2014 calling US-East from Asia adds 150\u2013250 ms per round trip.",
+   "source": "performance_and_latency.md"
+  },
+  {
+   "text": "### Should I cache answers?\nFor high-traffic, repeated questions (like \"How do I reset my password?\"), yes. Cache responses for a short window (5\u201360 minutes) keyed on the normalized question and collection. Clear the cache when you update the underlying documents, or you'll serve stale answers. Professional and Enterprise plans can enable **Answer Cache** at **Collections > Settings > Performance**, which does this automatically and invalidates on document updates.",
+   "source": "performance_and_latency.md"
+  },
+  {
+   "text": "### Why is the first request after a quiet period slower?\nCollections that haven't been queried for over 24 hours are moved to warm storage. The first query after that may take 1\u20133 extra seconds while the index is loaded into memory. Enterprise customers can enable **Always Warm** to keep indexes in memory permanently.\n\n---\n\n## Timeouts and Retries",
+   "source": "performance_and_latency.md"
+  },
+  {
+   "text": "### My requests are timing out \u2014 what should I check? 1. **Your client timeout** \u2014 make sure it's at least 30 seconds for non-streaming `/query`. A 5-second timeout will cut off normal long answers. 2. **Very large prompts** \u2014 a high `top_k` combined with large chunks can push requests near the model's context limit, which slows generation sharply. 3. **status.stratifylabs.io** \u2014 check for an active incident. 4. **Your network** \u2014 corporate proxies sometimes buffer or terminate streaming",
+   "source": "performance_and_latency.md"
+  },
+  {
+   "text": "responses. Test from outside the proxy.\n\nIf timeouts continue, send the request IDs to support@stratifylabs.io.\n\n### How should I retry failed requests?\nUse **exponential backoff with jitter**: wait 1s, then 2s, 4s, 8s, adding a random 0\u20131 second each time, and give up after 5 attempts. Only retry 429 and 5xx errors. Always honor the `Retry-After` header on 429 responses.",
+   "source": "performance_and_latency.md"
+  },
+  {
+   "text": "Avoid retrying without delays \u2014 when many clients retry at the same moment, they create a \"thundering herd\" that can turn a brief blip into a longer outage.",
+   "source": "performance_and_latency.md"
+  },
+  {
+   "text": "### What is a circuit breaker and do I need one?\nA circuit breaker stops sending requests to a service after repeated failures (for example, 5 failures in 30 seconds), returns a fallback immediately, and then tests again after a cool-down period. It protects your app from hanging on a struggling dependency. For customer-facing chat, a good fallback is a friendly \"Search is temporarily unavailable \u2014 here's how to contact support\" message.\n\n---\n\n## Concurrency and Load",
+   "source": "performance_and_latency.md"
+  },
+  {
+   "text": "### What happens if I go over my concurrent connection limit?\nRequests over the limit are queued for up to 10 seconds (shown in `X-Stratify-Queue-Ms`). If a slot doesn't open in that time, the request fails with **429 Too Many Requests** and code `concurrency_limit_exceeded`. Concurrent connection limits are 2 (Free Trial), 10 (Starter), 50 (Professional), and custom for Enterprise.",
+   "source": "performance_and_latency.md"
+  },
+  {
+   "text": "### We're planning a launch \u2014 how do we prepare for a traffic spike?\n1. Load-test against a **test key** (`ak_test_`) in the sandbox first \u2014 test traffic doesn't count toward your limits.\n2. Estimate your peak requests per minute and confirm it's within your plan's limit with headroom.\n3. Enable answer caching for your most common questions.\n4. Enterprise customers: tell your TAM at least **5 business days** before the launch so we can pre-scale capacity and keep an engineer on standby.",
+   "source": "performance_and_latency.md"
+  },
+  {
+   "text": "# Security and Compliance\n\n## Data Security\n\n### Is my data encrypted?\nYes. All data is encrypted both in transit and at rest:\n\n- **In transit**: All communication uses TLS 1.3. We do not support TLS 1.1 or earlier.\n- **At rest**: Documents and embeddings are encrypted with AES-256-GCM. Encryption keys are managed through AWS Key Management Service (KMS) and rotated automatically every 90 days.",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "Your search queries are also encrypted in transit and are **not** logged by default. If you want query logging for analytics purposes, you can enable it explicitly at **Settings > Security > Query Logging**.\n\n### Where is my data stored?\nBy default, data is stored in US-East AWS data centers.",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "- **Professional and Enterprise plans** can choose EU-West (Ireland) as their primary data region. If you select EU-West, your data never leaves that region.\n- **Enterprise plans** have access to global deployment options and custom data residency configurations.\n\nAll infrastructure runs in SOC 2 certified AWS data centers.",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "### Who can access my data?\nOnly authorized members of your organization can access your data through the platform. Stratify Labs staff do not access customer data except when required to provide support (and only with your permission). Access is logged in the audit trail.\n\n---\n\n## Authentication and Access Control",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "### How do I enable Multi-Factor Authentication (MFA)?\nTo enable MFA for your own account:\n1. Go to **Settings > Security > Authentication**\n2. Click \"Enable MFA\"\n3. Choose your method: authenticator app (Google Authenticator, Authy), SMS, or hardware key (YubiKey, FIDO2)\n4. Scan the QR code or follow the setup instructions\n5. Enter the verification code to confirm setup",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "To require MFA for everyone in your organization, go to **Settings > Security > Authentication > Require MFA**. Once enforced, members must set up MFA before they can log in again.\n\nNote: SMS is supported but not recommended for high-security environments. Authenticator apps and hardware keys are more secure.\n\n### Does Stratify Labs support Single Sign-On (SSO)?\nYes, SSO is available on **Professional and Enterprise plans**. We support:\n- SAML 2.0\n- OIDC (OpenID Connect)",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "Compatible identity providers include Okta, Azure AD, Google Workspace, OneLogin, and PingFederate.\n\nTo configure SSO:\n1. Go to **Settings > Security > SSO**\n2. Enter your Identity Provider metadata URL\n3. Map your IdP attributes to Stratify Labs roles\n4. Optionally enforce SSO (this disables password-based login for your org)",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "### Can I restrict which IP addresses can access the API?\nYes \u2014 IP allowlisting is available on **Professional and Enterprise plans**. Go to **Settings > Security > IP Allowlist** to add approved IP ranges. Requests from unlisted IPs will be rejected.",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "### What roles and permissions are available?\nAll plans include three built-in roles:\n- **Owner** \u2014 Full access including billing and member management\n- **Admin** \u2014 Manages API keys, integrations, and analytics. No billing access.\n- **Member** \u2014 Uses the platform and generates personal API keys",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "**Enterprise plans** support custom roles with granular permission controls, including specific access to collections, analytics, billing, integrations, and more. Custom roles are created at **Settings > Security > Roles**.\n\n---\n\n## Compliance\n\n### Is Stratify Labs SOC 2 certified?\nYes. Stratify Labs maintains **SOC 2 Type II** certification, audited annually by an independent firm. The audit covers Security, Availability, Confidentiality, and Processing Integrity.",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "To request our latest SOC 2 report, email security@stratifylabs.io. An NDA is required.\n\n### Is Stratify Labs GDPR compliant?\nYes. For EU customers:",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "- **Data Processing Agreement (DPA)**: All Professional and Enterprise customers are automatically covered. You can find the DPA at stratifylabs.io/legal/dpa. - **Data residency**: EU customers on Professional and Enterprise plans can select EU-West (Ireland) as their data region. Data never leaves that region. - **Right to erasure**: We can delete all data associated with a specific end user within 72 hours upon request. - **Data portability**: Export all your organization's data in JSON format",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "from **Settings > Security > Data Export**. - **Sub-processors**: Our sub-processor list is published at stratifylabs.io/legal/sub-processors. We notify customers 30 days before adding new sub-processors.",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "### Does Stratify Labs support HIPAA compliance?\nHIPAA-compliant configurations are available for **Enterprise customers** with a signed Business Associate Agreement (BAA). This includes dedicated infrastructure, enhanced audit logging, automatic PHI detection and redaction, and 7-year audit log retention.\n\nContact support@stratifylabs.io to discuss HIPAA-compliant deployment options.",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "### What happens to my data if I cancel my account?\nAfter cancellation, your data is retained for **30 days**. During this window, you can export everything from **Settings > Security > Data Export**. After 30 days, all data \u2014 documents, embeddings, query logs, and audit logs \u2014 is permanently deleted.\n\nIf you reactivate within the 30-day window, your data is fully restored.\n\n---\n\n## Audit Logging",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "### Does Stratify Labs keep an audit log of account activity?\nYes. All API actions are logged with:\n- Timestamp (UTC)\n- Who performed the action (user ID or API key prefix)\n- What action was taken\n- Which resource was affected\n- Source IP address\n\nYou can view audit logs at **Settings > Security > Audit Log**. Enterprise plans can stream audit logs to external SIEM systems (Splunk, Datadog, Sumo Logic).",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "### How long are audit logs retained?\n- Standard: 2 years\n- HIPAA-compliant configurations: 7 years\n\n---\n\n## Reporting Security Issues\n\n### How do I report a security vulnerability?\nWe take security reports seriously and will respond promptly. Here's how to reach us:",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "1. **Email**: Send details to security@stratifylabs.io\n2. **What to include**: Description of the vulnerability, steps to reproduce, potential impact, and any relevant screenshots or logs\n3. **Response timeline**:\n   - Acknowledgment within **24 hours**\n   - Assessment and severity rating within **72 hours**\n   - Fix timeline communicated within **1 week**\n\nWe follow responsible disclosure practices and do not pursue legal action against good-faith security researchers.",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "### Is there a bug bounty program?\nYes. We run a private bug bounty program through HackerOne. Bounties range from $100 to $10,000 depending on severity. Email security@stratifylabs.io to request an invitation.",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "### How will I be notified during a security incident?\nIf a security incident affects your account, we will:\n1. Send an email and post to our status page (status.stratifylabs.io) within **1 hour** of detection\n2. Provide updates every 2 hours until the issue is resolved\n3. Publish a post-incident report within **5 business days**, including root cause and preventive measures\n\n---\n\n## Data Retention Reference",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "| Data Type | Default Retention |\n|-----------|------------------|\n| Documents | Until deleted by user |\n| Embeddings | Until source document is deleted |\n| Query logs | 90 days (configurable) |\n| Analytics | 1 year |\n| Audit logs | 2 years (7 years for HIPAA) |\n| Backups | 30 days |\n\nEnterprise customers can configure custom retention policies per collection.",
+   "source": "security_and_compliance.md"
+  },
+  {
+   "text": "# Support Policy, Severity Levels and Escalation\n\n## How Support Works\n\n### How do I open a support ticket?\n- **Email**: support@stratifylabs.io (creates a ticket automatically)\n- **Dashboard**: click **Help > New Ticket** (Professional and Enterprise also have live chat)\n- **Phone**: Enterprise customers have a 24/7 phone line for Severity 1 issues, listed in your order form",
+   "source": "support_and_escalation.md"
+  },
+  {
+   "text": "Opening a ticket from the dashboard is fastest because it attaches your organization ID and recent error logs automatically.",
+   "source": "support_and_escalation.md"
+  },
+  {
+   "text": "### What information should I include in a ticket?\nThe fastest tickets to resolve include:\n1. **What you expected vs. what happened** \u2014 one or two sentences each\n2. **Request IDs** from the `X-Request-Id` header of failing requests\n3. **Timestamps** with time zone (UTC preferred)\n4. **Error codes and full error messages**\n5. **Scope** \u2014 one user or everyone? One collection or all? Since when?\n6. **What changed** \u2014 recent deploys, key rotations, integration changes, or new documents",
+   "source": "support_and_escalation.md"
+  },
+  {
+   "text": "Never include a full API key. The first 10 characters (the prefix) are enough for us to identify it.\n\n---\n\n## Severity Levels\n\n### How is the severity of my ticket decided?\nYou set the initial severity when you open the ticket. Our support engineers may adjust it based on impact, and will tell you if they do.",
+   "source": "support_and_escalation.md"
+  },
+  {
+   "text": "| Severity | Definition | Example | |----------|------------|---------| | **Sev 1 \u2014 Critical** | Production is down or unusable for all users, no workaround | All API requests return 503 | | **Sev 2 \u2014 High** | Major feature broken or badly degraded, workaround is painful | Zendesk sync stopped; answers 10x slower than normal | | **Sev 3 \u2014 Medium** | Partial or minor impact, a reasonable workaround exists | One document fails to ingest | | **Sev 4 \u2014 Low** | Questions, how-to requests, feature",
+   "source": "support_and_escalation.md"
+  },
+  {
+   "text": "requests | \"How do I set up SSO?\" |\n\n### What are the response times for each severity?\nFirst-response targets by plan:\n\n| Severity | Starter | Professional | Enterprise |\n|----------|---------|-------------|------------|\n| Sev 1 | 24 hours | 2 hours | 1 hour, 24/7 |\n| Sev 2 | 48 hours | 4 hours | 2 hours, 24/7 |\n| Sev 3 | 48 hours | 1 business day | 4 business hours |\n| Sev 4 | 3 business days | 2 business days | 1 business day |",
+   "source": "support_and_escalation.md"
+  },
+  {
+   "text": "Free Trial accounts are supported through the community forums on a best-effort basis. Business hours are Monday\u2013Friday, 6 AM \u2013 6 PM Pacific, excluding US holidays. Sev 1 and Sev 2 for Enterprise are handled around the clock.",
+   "source": "support_and_escalation.md"
+  },
+  {
+   "text": "### What counts as \"first response\"?\nA first response is a reply from a human support engineer who has reviewed your ticket \u2014 not an automated acknowledgment. Resolution time depends on the issue, but for Sev 1 and Sev 2 we provide updates at least every 2 hours until it is resolved or downgraded.\n\n---\n\n## Escalation",
+   "source": "support_and_escalation.md"
+  },
+  {
+   "text": "### My ticket isn't moving \u2014 how do I escalate?\n1. **Reply on the ticket** with \"Please escalate\" and the business impact (for example, \"500 customers can't get answers in our help widget\"). This alerts the support team lead.\n2. **Professional**: if there's no update within the response target, email escalations@stratifylabs.io with the ticket number.\n3. **Enterprise**: contact your dedicated support engineer or Technical Account Manager (TAM) directly. For Sev 1, call the 24/7 phone line.",
+   "source": "support_and_escalation.md"
+  },
+  {
+   "text": "Escalation brings in senior engineers and management visibility. It does not change the technical facts of the issue, so a clear description of impact is the most useful thing you can add.",
+   "source": "support_and_escalation.md"
+  },
+  {
+   "text": "### When should I raise a ticket to Sev 1?\nRaise to Sev 1 when production is unusable for your users and there is no workaround \u2014 for example, every query is failing or returning errors. Partial slowness, a single failing integration, or an issue in a test environment is Sev 2 or lower. Accurate severity helps us get the right engineers on the right problems fastest.\n\n---\n\n## Incidents and Communication",
+   "source": "support_and_escalation.md"
+  },
+  {
+   "text": "### How will I know if there's a platform-wide incident?\nCheck **status.stratifylabs.io**, which shows real-time health for the API, dashboard, ingestion pipeline, and each integration. You can subscribe to updates by email, SMS, Slack, or RSS. During an incident we post an update at least every 2 hours.\n\nIf you open a ticket about an issue that is already a known incident, your ticket will be linked to it and you'll be notified when it's resolved \u2014 you don't need to keep checking.",
+   "source": "support_and_escalation.md"
+  },
+  {
+   "text": "### Will I get a root cause analysis (RCA) after an incident?\nYes. For any Sev 1 platform incident we publish a post-incident report within **5 business days**. It covers the timeline, customer impact, root cause, how it was resolved, and the specific changes we're making to prevent it from happening again. Enterprise customers can request a private RCA review call with their TAM.",
+   "source": "support_and_escalation.md"
+  },
+  {
+   "text": "### Do SLA breaches earn service credits?\nYes, for paid plans. If monthly uptime falls below your plan's SLA (Starter 99.5%, Professional 99.9%, Enterprise 99.99%), you can request a credit within 30 days of the end of the affected month:\n\n| Monthly uptime below SLA by | Credit |\n|-----------------------------|--------|\n| Up to 0.5% | 10% of monthly fee |\n| 0.5% \u2013 1.0% | 25% of monthly fee |\n| More than 1.0% | 50% of monthly fee |",
+   "source": "support_and_escalation.md"
+  },
+  {
+   "text": "Email billing@stratifylabs.io with the incident dates. Scheduled maintenance announced at least 72 hours in advance does not count against uptime.\n\n---\n\n## Enterprise Support",
+   "source": "support_and_escalation.md"
+  },
+  {
+   "text": "### What does the Enterprise support package include?\n- A **dedicated support engineer** who knows your configuration\n- A named **Technical Account Manager (TAM)** for onboarding, architecture reviews, and quarterly business reviews\n- 24/7 coverage for Sev 1 and Sev 2\n- A shared Slack channel with our support team\n- Proactive alerts when your usage, error rates, or latency look abnormal\n- Advance notice of maintenance and model changes",
+   "source": "support_and_escalation.md"
+  },
+  {
+   "text": "# Troubleshooting Common Errors\n\n## HTTP Error Codes\n\n### I'm getting a 429 error \u2014 what does it mean and what should I do?\nA **429 Too Many Requests** error means you've exceeded your plan's rate limit \u2014 either the requests-per-minute or requests-per-day limit.",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "**What to do:** 1. **Check the `Retry-After` header** \u2014 the API response includes a number (in seconds) telling you how long to wait before retrying. 2. **Check your usage** \u2014 go to Settings > Billing > Usage to see how much of your daily limit you've used. 3. **Use test keys for development** \u2014 API calls made with test keys (`ak_test_`) don't count toward your limits. 4. **Spread out requests** \u2014 if you're making many calls in a short window, add small delays between them. 5. **Upgrade your",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "plan** \u2014 if you're regularly hitting limits, you may need a higher tier. Go to Settings > Billing to compare plans.\n\nRate limits by plan:\n\n| Plan | Requests/minute | Requests/day |\n|------|-----------------|--------------|\n| Free Trial | 10 | 1,000 |\n| Starter | 60 | 50,000 |\n| Professional | 300 | 500,000 |\n| Enterprise | Custom | Custom |\n\n### I'm getting a 401 Unauthorized error\nA **401** means your API key is missing, invalid, or has been revoked.",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "**What to check:** 1. **Is the key in the request?** Make sure you're passing the key in the `Authorization` header as `Bearer ak_live_yourkey`. 2. **Is the key still active?** Go to Settings > API Keys to check. The key may have been rotated or deleted. 3. **Was the key found in a public repo?** If we detect your key in a public GitHub repository, we automatically revoke it and send an email to the account owner. Check your inbox. 4. **Right key for the right environment?** Test keys",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "(`ak_test_`) only work against the sandbox. Live keys (`ak_live_`) are required for production.\n\nIf you've verified all of the above and still get 401s, generate a new key from Settings > API Keys and test with that.\n\n### I'm getting a 403 Forbidden error\nA **403** means your API key is valid but doesn't have permission to perform the action you're trying to do.",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "**Common causes:**\n- You're using a read-only key (`ak_readonly_`) to make a write request\n- Your role doesn't have access to the collection or resource you're querying\n- IP allowlisting is enabled and your IP isn't on the approved list (Settings > Security > IP Allowlist)\n\nCheck the key type and your account role. If you think your permissions are incorrect, ask your org's Owner or Admin to review your settings.",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "### I'm getting a 404 Not Found error\nA **404** usually means the collection or resource you're looking for doesn't exist or can't be found.",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "**What to check:**\n1. **Collection name** \u2014 collection names are case-sensitive. Make sure you're using the exact name as it appears in your dashboard.\n2. **Organization name** \u2014 if your API endpoint includes your org name, verify it matches exactly.\n3. **Empty collection** \u2014 if you created a collection but haven't ingested any documents yet, some queries will return a 404. Ingest at least one document first.\n4. **Typo in the endpoint** \u2014 double-check the URL or collection name in your request.",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "### I'm getting 500 or 503 errors\nA **500 Internal Server Error** or **503 Service Unavailable** means something went wrong on our end.",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "**What to do:**\n1. **Check our status page** \u2014 visit status.stratifylabs.io to see if there's an active incident or scheduled maintenance.\n2. **Try again in a few minutes** \u2014 transient errors often resolve quickly.\n3. **If it persists** \u2014 contact support@stratifylabs.io with the timestamp of your requests and any request IDs from the error response. We'll investigate.\n\nWe aim to resolve incidents quickly and post updates on our status page every 2 hours during active incidents.\n\n---",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "## Performance Issues\n\n### My API responses are slow \u2014 what could be causing this?\nSlow responses can have a few causes:",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "1. **Large knowledge base** \u2014 searching across many documents takes longer. Make sure you're querying a specific collection rather than searching everything. 2. **First query after ingestion** \u2014 the first query after adding new documents may take 2\u20135 seconds while embeddings are generated. This is normal; subsequent queries will be faster. 3. **High concurrency** \u2014 if you're approaching your concurrent connection limit, requests may queue. Check your plan's concurrent connection limit and",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "consider upgrading if needed. 4. **Network latency** \u2014 if your application is in a different region from your Stratify Labs data region, there will be added latency. Enterprise plans support multi-region deployment. 5. **Large result sets** \u2014 requesting a high `top_k` value (many results per query) increases processing time. Start with 5 and increase only if needed.",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "If you're consistently seeing responses over 2 seconds and none of the above applies, contact support@stratifylabs.io with examples.\n\n---\n\n## Knowledge Base and Search Issues\n\n### My embeddings aren't updating after I ingest new documents\nAfter ingestion, embeddings are generated in the background. This usually takes 1\u20132 minutes for normal-sized documents. Large documents or large batches can take longer.",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "**What to check:**\n1. **Wait a bit longer** \u2014 give it 5 minutes, then try your query again.\n2. **Verify the document ingested** \u2014 check your collection in the dashboard to confirm the document appears. If it doesn't show up, the ingestion may have failed.\n3. **Check for ingestion errors** \u2014 go to your collection and look for any error indicators on recently uploaded documents.",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "If a document shows as ingested but still isn't returning in search results after 10 minutes, contact support@stratifylabs.io.\n\n### My query is returning wrong or irrelevant answers\nIf the answers you're getting back don't match what you asked, here are the most common reasons:",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "1. **Your knowledge base doesn't contain relevant content** \u2014 the system can only return what's in your documents. If the right answer isn't in your KB, it won't appear. Check whether the relevant content has been ingested. 2. **Query is too vague** \u2014 more specific queries return more relevant results. Try rephrasing your question to be more precise. 3. **Confidence threshold is too low** \u2014 if your app is set to return low-confidence results, you'll see less relevant content. Raise the",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "confidence threshold in your collection settings. 4. **Chunk size mismatch** \u2014 if documents were chunked in a way that splits key context, results may seem incomplete. Check your collection's chunking settings. 5. **Wrong collection** \u2014 make sure you're querying the collection that contains the relevant documents.",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "If you've checked all of the above and are still seeing consistently poor results, contact support@stratifylabs.io with example queries and expected vs. actual answers. We can help tune the configuration.\n\n### Why does the AI say \"I don't know\" or give no answer?\nThis means no content in your knowledge base met the confidence threshold for your query. It's actually the correct behavior \u2014 the system is designed not to make up answers.",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "To improve coverage:\n- Add more relevant documents to your knowledge base\n- Make sure documents are properly formatted and not truncated\n- Try rewriting the query to match the language used in your documents\n\n---\n\n## Need More Help?\n\nIf an error isn't covered here, contact **support@stratifylabs.io** and include:\n- The error code and full error message\n- The timestamp(s) of the failing requests\n- Your organization name and the collection you were querying\n- What you were trying to do",
+   "source": "troubleshooting.md"
+  },
+  {
+   "text": "The more detail you provide, the faster we can resolve it.",
+   "source": "troubleshooting.md"
+  }
+ ]
+}
