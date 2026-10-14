@@ -98,6 +98,19 @@ Then open http://localhost:8501
 
 Full incident lifecycle in under 5 minutes.
 
+## Claude Skills
+
+`skills/` holds four [Claude skills](https://docs.claude.com/en/docs/agents-and-tools/agent-skills) that let Claude act as Stratify Labs staff:
+
+| Skill | Role |
+|-------|------|
+| `stratify-labs` | Company fact sheet: plans, limits, SLAs, severity, contacts, voice. The others read it. |
+| `stratify-support` | Support engineer: answers customer tickets from the KB, with an internal note |
+| `stratify-incident-triage` | On-call: symptom → severity → ordered checks → mitigation → status updates → RCA |
+| `stratify-tam` | Technical Account Manager: onboarding, success plans, QBRs, health checks, renewal risk |
+
+Install by copying or symlinking each folder into `~/.claude/skills/`.
+
 ## Adding Documents
 
 Drop a `.md` file into `knowledge_base/`, then rebuild the pre-computed index and commit `kb_index/` with it:
