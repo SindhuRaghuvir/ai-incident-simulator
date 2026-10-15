@@ -114,7 +114,9 @@ Install by copying or symlinking each folder into `~/.claude/skills/`.
 
 ## Adding Documents
 
-Drop a `.md` file into `knowledge_base/`, then rebuild the pre-computed index and commit `kb_index/` with it:
+Drop a `.md` file into `knowledge_base/` using the existing shape (`# Title`, `## Section`, `### Question?` followed by the answer). Each `###` question and its answer become one chunk, labelled with the doc title and section, so keep every answer under its own question heading.
+
+Then rebuild the pre-computed index and commit `kb_index/` with it:
 
 ```bash
 python3 -c "import rag_engine; print(rag_engine.build_index())"
@@ -122,12 +124,20 @@ python3 -c "import rag_engine; print(rag_engine.build_index())"
 
 The app loads `kb_index/` at startup, so a cold start makes no embedding calls. If the KB changes and the index isn't rebuilt, the app detects the mismatch and rebuilds on first load (slower, one time).
 
+Add two or three questions the new doc answers to `suggestions.py` (they show up as "Try asking" buttons), then run the eval set. It checks that every suggested question retrieves the right doc and gets an answer with the expected facts:
+
+```bash
+python3 eval/run_kb_eval.py
+```
+
 ## Project Structure
 
 ```
 ├── app.py                      # Entrypoint + password gate + navigation
 ├── config.py                   # All settings: models, pricing, prompts
 ├── rag_engine.py               # Ingest, retrieve, generate (RAG pipeline)
+├── suggestions.py              # "Try asking" questions per KB doc + expected facts
+├── eval/run_kb_eval.py         # Eval set: retrieval + answer check for every suggestion
 ├── metrics_store.py            # SQLite metrics persistence
 ├── failure_simulator.py        # 12 failure modes with pre/post hooks
 ├── logger.py                   # Structured logging to SQLite

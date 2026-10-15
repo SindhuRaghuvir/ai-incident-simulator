@@ -1,6 +1,6 @@
 # Stratify Labs Fact Sheet
 
-Condensed from the 14 docs in `knowledge_base/`. The doc name in brackets is where the full detail lives.
+Condensed from the 15 docs in `knowledge_base/`. The doc name in brackets is where the full detail lives.
 
 ## Contents
 1. Plans and pricing
@@ -26,15 +26,17 @@ Condensed from the 14 docs in `knowledge_base/`. The doc name in brackets is whe
 | Plan | Price | Requests/min | Requests/day | Concurrent | Collections | Support |
 |------|-------|--------------|--------------|-----------|-------------|---------|
 | Free Trial | Free, 14 days, no card | 10 | 1,000 | 2 | 1 (≤10k docs) | Community forums |
-| Starter | $49/mo ($470/yr) | 60 | 50,000 | 10 | 5 | Email, 48h |
-| Professional | $199/mo ($1,910/yr) | 300 | 500,000 | 50 | Unlimited | Priority email + chat, 4h |
-| Enterprise | Custom | Custom | Custom | Custom | Unlimited | Dedicated engineer + TAM, 1h |
+| Starter | $49/mo ($470/yr) | 60 | 50,000 | 10 | 5 | Email (Sev 1: 24h) |
+| Professional | $199/mo ($1,910/yr) | 300 | 500,000 | 50 | Unlimited | Priority email + chat (Sev 1: 2h) |
+| Enterprise | Custom | Custom | Custom | Custom | Unlimited | Dedicated engineer + TAM (Sev 1: 1h, 24/7) |
 
 - Annual billing = 20% off (Starter, Professional). Switch at **Settings > Billing**.
 - Overage: extra requests $0.002 (Starter) / $0.001 (Pro); storage $0.10 / $0.05 per GB-month; embeddings $0.0001 / $0.00005 per doc; priority processing Pro $0.005/request, Enterprise included.
 - Usage charges calculated daily, billed monthly. Invoices at **Settings > Billing > Invoice History**.
 - Cancellation: data kept 30 days, then permanently deleted. Reactivating within 30 days restores everything.
-- Professional adds SSO, IP allowlist, EU-West region, hybrid search, reranking, Permission Sync.
+- Professional adds SSO, IP allowlist, EU-West region, hybrid search, reranking, Answer Cache, Permission Sync. Full Starter vs. Professional table in billing_and_plans.
+- Refunds: new customers get a full refund within 7 days of their first subscription; no refunds on consumed usage; Enterprise per contract; request via support@stratifylabs.io (reply within 1 business day). Outages earn service credits (section 6), not refunds.
+- **Refund processing time is deliberately undefined.** "How long do refunds take to process?" is the Failure Lab's hallucination baseline question, so never add a figure for it to the KB.
 
 ## 2. Limits [document_ingestion, integrations]
 
@@ -63,6 +65,7 @@ File types: .txt, .md, .pdf (text-based only, no scans), .html, .csv (one row = 
 - Retry: only 429 and 5xx. Backoff 1s, 2s, 4s, 8s + 0–1s jitter, max 5 tries, honor `Retry-After`. Don't retry 400/401/403/404/409/413.
 - Recommended timeouts: /search 10s, /query 30s, uploads 60s. Server hard limit 60s → 504.
 - SDKs: `pip install stratifylabs`, `npm install @stratifylabs/sdk`. v1 supported ≥12 months after v2.
+- First-query walkthrough (sign up → collection → key → `POST /query`) and plain definitions of collection, document, chunk, embedding, sources, top_k: [product_overview].
 
 ## 4. Keys, roles, auth [getting_started, account_and_login, security_and_compliance]
 
@@ -142,6 +145,8 @@ File types: .txt, .md, .pdf (text-based only, no scans), .html, .csv (one row = 
 - Zendesk: only published articles sync; tokens expire; tickets sync only if tagged "knowledge-base"; PII redaction + custom regex rules; Agent Assist sidebar shows top 3 answers.
 - Confluence: only selected spaces; restricted pages need Permission Sync (Pro+); deleted pages removed within 1h.
 - Webhooks: HMAC-SHA256 in `X-Stratify-Signature`.
+- Zendesk and Confluence sync on the plan interval: Starter 30 min, Professional 15 min, Enterprise 5 min / real-time (webhooks).
+- No native Microsoft Teams, Google Drive, Notion, or SharePoint integration: use inbound webhooks / `POST /collections/{name}/documents` plus `/query`. Requests for new integrations are Sev 4 tickets.
 
 ## 12. Security and compliance [security_and_compliance]
 
@@ -196,5 +201,7 @@ The app's Failure Lab injects twelve failures between Stratify's app and its LLM
 | `model_deprecated` | HTTP 404 `model_not_found` | Retired pinned model | Model in config, deprecation tracking |
 
 Every Chat answer gets a **hallucination check** (LLM judge, groundedness = supported claims ÷ total). Silent failures still create tickets, with the observed signal (groundedness, truncation, latency) as the ticket's evidence.
+
+Chat's "Try asking" buttons come from `suggestions.py` (questions per KB doc, with expected facts). `eval/run_kb_eval.py` checks every one for retrieval and answer correctness; run it after any KB edit. Questions the KB deliberately can't answer (`HALLUCINATION_BAIT`) only appear while the Hallucination failure is on.
 
 App pages for evidence: Logs (request IDs, WARN/ERROR, components incl. `eval`), Metrics, SLA (uptime, P95, error budget), Cost, Ticket Queue, RCA generator.

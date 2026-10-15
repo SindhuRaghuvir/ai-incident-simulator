@@ -48,11 +48,11 @@ Yes — enable "Auto-respond" in **Settings > Integrations > Slack > Configurati
 ### My Help Center articles aren't syncing from Zendesk — what's wrong?
 The most common causes:
 
-1. **Article is still in draft** — Only published articles are synced. Publish the article in Zendesk and it will sync within 15 minutes.
+1. **Article is still in draft** — Only published articles are synced. Publish the article in Zendesk and it syncs on the next run.
 2. **API token expired** — Zendesk API tokens can expire. Go to Settings > Integrations > Zendesk and reconnect with a fresh token.
-3. **Sync is behind** — The default sync runs every 15 minutes. If you just published an article, wait a few minutes and check again.
+3. **Sync is behind** — Sync runs every 30 minutes on Starter, every 15 minutes on Professional, and every 5 minutes or in real time on Enterprise. If you just published an article, wait for the next run and check again.
 
-If articles are still missing after 30 minutes, contact support@stratifylabs.io with the article URL.
+If articles are still missing after two sync intervals, contact support@stratifylabs.io with the article URL.
 
 ### I see customer PII in synced Zendesk tickets — how do I fix this?
 By default, the PII redaction engine removes emails, phone numbers, and names from synced tickets. If you're seeing other types of sensitive data (like account numbers or custom identifiers), you can add custom redaction rules at **Settings > Integrations > Zendesk > PII Rules** using regex patterns.
@@ -66,11 +66,11 @@ When two-way sync is enabled, Stratify Labs adds a sidebar to the Zendesk agent 
 Usage analytics track which suggestions are used vs. ignored to help you improve your KB over time.
 
 ### What sync options are available for Zendesk?
-- **Articles** — Syncs Help Center articles to a collection (every 15 minutes by default)
+- **Articles** — Syncs Help Center articles to a collection (every 30 minutes on Starter, 15 on Professional)
 - **Tickets** — Syncs resolved tickets with PII redacted. Only tickets tagged "knowledge-base" are included.
 - **Macros** — Syncs agent macros as knowledge snippets
 
-Enterprise plans support real-time sync via webhooks instead of the 15-minute polling interval.
+Enterprise plans support real-time sync via webhooks instead of polling.
 
 ---
 
@@ -102,6 +102,14 @@ Deleted pages are removed from Stratify Labs within 1 hour of deletion in Conflu
 ---
 
 ## Webhooks and Custom Integrations
+
+### Do you integrate with Microsoft Teams, Google Drive, Notion, or SharePoint?
+Not natively. The built-in integrations are **Slack**, **Zendesk**, and **Confluence**. Any other tool, including Microsoft Teams, Google Drive, Notion, SharePoint, or your own systems, connects through the API and webhooks:
+
+1. **Bring content in**: push documents with an inbound webhook (**Settings > Integrations > Webhooks > Add Endpoint**) or with `POST /collections/{name}/documents`.
+2. **Answer questions there**: have your bot or app call `POST /query` and show the answer and sources.
+
+If a native integration matters to your team, send the request to support@stratifylabs.io. Feature requests are handled as Sev 4 tickets.
 
 ### Can I connect Stratify Labs to a custom tool?
 Yes. You can use inbound webhooks to push documents from any system into Stratify Labs. Go to **Settings > Integrations > Webhooks > Add Endpoint** and follow the setup instructions.

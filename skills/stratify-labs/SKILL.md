@@ -11,7 +11,7 @@ It is the company in Sindhu's **AI Incident Simulator** portfolio app (`/Users/s
 
 ## How to use this skill
 
-1. Read `references/facts.md` before stating any Stratify number, limit, price, timeline, or policy. It condenses all 14 knowledge-base docs. Never invent a figure that isn't there: invented numbers that contradict the KB break the illusion of a real company, and the simulator's chatbot will contradict you.
+1. Read `references/facts.md` before stating any Stratify number, limit, price, timeline, or policy. It condenses all 15 knowledge-base docs. Never invent a figure that isn't there: invented numbers that contradict the KB break the illusion of a real company, and the simulator's chatbot will contradict you.
 2. If you need detail beyond the fact sheet, read the full KB doc. The docs live in `knowledge_base/` in the app repo (`/Users/sindhu/claude/knowledge_base/` on Sindhu's machine). `references/facts.md` lists which doc covers what.
 3. If something genuinely isn't defined anywhere, say so and propose a value that fits the existing pattern (for example, Starter < Professional < Enterprise). Flag it as new so it can be added to the KB.
 

@@ -89,58 +89,35 @@ for msg in st.session_state.messages:
 # Suggested questions — always shown, refreshes after every answer
 import random
 
-ALL_SUGGESTIONS = [
-    "My API key isn't working",
-    "I was charged unexpectedly — what happened?",
-    "How do I reset my password?",
-    "What's the difference between Starter and Professional?",
-    "My Slack bot isn't responding",
-    "Is Stratify Labs HIPAA compliant?",
-    "I got a 429 error — what do I do?",
-    "How do I cancel my subscription?",
-    "Can I get a refund?",
-    "My Zendesk articles aren't syncing",
-    "How do I enable MFA?",
-    "What file types can I upload?",
-    "My account is locked",
-    "How do I invite someone to my team?",
-    "Where can I find my invoice?",
-    "What happens to my data if I cancel?",
-    "I lost access to my MFA device",
-    "The API is returning 500 errors",
-    "My search results are irrelevant",
-    "How do I report a security issue?",
-    "Is there a free trial?",
-    "How do I talk to a human support agent?",
-    "What is your uptime SLA?",
-    "How do I upgrade my plan?",
-    "Which API errors should my code retry?",
-    "How do I stream answers from the API?",
-    "What happens when a model is deprecated?",
-    "Answers changed after a model upgrade — is this a bug?",
-    "What are the severity levels and response times?",
-    "How do I escalate a ticket that isn't moving?",
-    "Do SLA breaches earn service credits?",
-    "Why are my API responses slow?",
-    "My requests are timing out",
-    "The AI made up an answer — why?",
-    "What confidence threshold should I use?",
-    "My PDF failed with 'No extractable text'",
-    "Why am I seeing old content after updating a document?",
-    "What does Enterprise onboarding look like?",
-    "What happens in a QBR?",
-    "How long do refunds take to process?",
-    "What's the exact price of the Enterprise plan?",
-    "Which countries do you have data centers in?",
-]
+from suggestions import SUGGESTIONS, HALLUCINATION_BAIT
 
-if "current_suggestions" not in st.session_state:
-    st.session_state.current_suggestions = random.sample(ALL_SUGGESTIONS, 6)
+
+def pick_suggestions(n: int = 6) -> list[str]:
+    """One question from each of n different KB docs, so every refresh covers a
+    spread of topics. While the Hallucination failure is on, half of them are
+    questions the KB deliberately doesn't answer."""
+    by_doc = {}
+    for s in SUGGESTIONS:
+        by_doc.setdefault(s["doc"], []).append(s["q"])
+    picks = [random.choice(by_doc[doc]) for doc in random.sample(list(by_doc), n)]
+    if "hallucination" in active:
+        picks[: n // 2] = [b["q"] for b in random.sample(HALLUCINATION_BAIT, n // 2)]
+    return picks
+
+
+bait_mode = "hallucination" in active
+if "current_suggestions" not in st.session_state or st.session_state.get("suggestions_bait_mode") != bait_mode:
+    st.session_state.current_suggestions = pick_suggestions()
+    st.session_state.suggestions_bait_mode = bait_mode
 
 st.markdown("**Try asking:**")
+if bait_mode:
+    st.caption("Hallucination mode is on: questions marked ⚠️ aren't answered by the docs. Watch the groundedness score.")
+bait_questions = {b["q"] for b in HALLUCINATION_BAIT}
 cols = st.columns(2)
 for i, suggestion in enumerate(st.session_state.current_suggestions):
-    if cols[i % 2].button(suggestion, use_container_width=True):
+    label = f"⚠️ {suggestion}" if suggestion in bait_questions else suggestion
+    if cols[i % 2].button(label, use_container_width=True):
         st.session_state.pending_prompt = suggestion
         st.rerun()
 
@@ -295,7 +272,7 @@ if prompt:
             })
 
             # Refresh suggestions for next round
-            st.session_state.current_suggestions = random.sample(ALL_SUGGESTIONS, 6)
+            st.session_state.current_suggestions = pick_suggestions()
 
             # Log metrics
             metrics_store.log_request(

@@ -50,39 +50,85 @@ def _embed_query(query: str) -> np.ndarray:
     return vec / (np.linalg.norm(vec) + 1e-10)
 
 
-def _chunk_text(text: str, chunk_size: int = None, overlap: int = None) -> list[str]:
-    chunk_size = chunk_size or config.CHUNK_SIZE
-    overlap = overlap or config.CHUNK_OVERLAP
+# Bump when the chunking logic changes, so the pre-built index is rebuilt
+CHUNKER_VERSION = "sections-v1"
 
-    paragraphs = text.split("\n\n")
-    chunks = []
-    current_chunk = ""
 
-    for para in paragraphs:
-        para = para.strip()
-        if not para:
+def _split_sections(text: str) -> list[tuple[str, str]]:
+    """Split markdown into (header, body) pairs: one per ### question, plus any
+    text that sits directly under a # or ## heading. The header carries the doc
+    title and section ("Billing and Plans > Refunds\\n### Can I get a refund?"),
+    so every chunk says what it is about. Text with no headings is one section."""
+    sections = []
+    title = section = question = None
+    body: list[str] = []
+    in_code = False
+
+    def flush():
+        text_body = "\n".join(body).strip()
+        if text_body:
+            crumb = " > ".join(p for p in (title, section) if p)
+            header = "\n".join(p for p in (crumb, f"### {question}" if question else "") if p)
+            sections.append((header, text_body))
+        body.clear()
+
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("```"):
+            in_code = not in_code
+        if not in_code and stripped == "---":
             continue
-        if len(current_chunk) + len(para) + 2 <= chunk_size:
-            current_chunk = current_chunk + "\n\n" + para if current_chunk else para
+        if not in_code and stripped.startswith("#"):
+            level = len(stripped) - len(stripped.lstrip("#"))
+            heading = stripped[level:].strip()
+            if level in (1, 2, 3) and heading:
+                flush()
+                if level == 1:
+                    title, section, question = heading, None, None
+                elif level == 2:
+                    section, question = heading, None
+                else:
+                    question = heading
+                continue
+        body.append(line)
+    flush()
+    return sections
+
+
+def _split_long(text: str, limit: int) -> list[str]:
+    """Split text into pieces of at most `limit` chars, breaking at paragraphs,
+    then lines, then words, so lists and tables stay intact where possible."""
+    if len(text) <= limit:
+        return [text]
+    for sep in ("\n\n", "\n", " "):
+        parts = [p for p in text.split(sep) if p.strip()]
+        if len(parts) > 1:
+            break
+    pieces, current = [], ""
+    for part in parts:
+        if len(part) > limit:
+            if current:
+                pieces.append(current)
+                current = ""
+            pieces.extend(_split_long(part, limit))
+        elif current and len(current) + len(sep) + len(part) > limit:
+            pieces.append(current)
+            current = part
         else:
-            if current_chunk:
-                chunks.append(current_chunk)
-            if len(para) > chunk_size:
-                words = para.split()
-                current_chunk = ""
-                for word in words:
-                    if len(current_chunk) + len(word) + 1 <= chunk_size:
-                        current_chunk = current_chunk + " " + word if current_chunk else word
-                    else:
-                        if current_chunk:
-                            chunks.append(current_chunk)
-                        current_chunk = word
-            else:
-                current_chunk = para
+            current = current + sep + part if current else part
+    if current:
+        pieces.append(current)
+    return pieces
 
-    if current_chunk:
-        chunks.append(current_chunk)
 
+def _chunk_text(text: str, chunk_size: int = None) -> list[str]:
+    """One chunk per Q&A (see _split_sections). A long answer is split into
+    several chunks that each repeat the header, so no chunk loses its question."""
+    chunk_size = chunk_size or config.CHUNK_SIZE
+    chunks = []
+    for header, body in _split_sections(text):
+        for piece in _split_long(body, max(chunk_size - len(header) - 1, 200)):
+            chunks.append(f"{header}\n{piece}" if header else piece)
     return chunks
 
 
@@ -90,7 +136,7 @@ def _read_knowledge_base() -> tuple[list[str], list[str], str]:
     """Chunk every KB file. Returns (texts, sources, fingerprint of the KB + settings)."""
     texts, sources = [], []
     digest = hashlib.sha256(
-        f"{config.EMBEDDING_MODEL}|{config.CHUNK_SIZE}|{config.CHUNK_OVERLAP}".encode()
+        f"{config.EMBEDDING_MODEL}|{config.CHUNK_SIZE}|{CHUNKER_VERSION}".encode()
     )
     for filepath in sorted(globmod.glob(os.path.join(config.KNOWLEDGE_BASE_DIR, "*.md"))):
         filename = os.path.basename(filepath)

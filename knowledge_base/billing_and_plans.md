@@ -7,10 +7,34 @@ Here's a quick breakdown to help you decide:
 
 - **Free Trial** — Best if you're just exploring. 14 days, no credit card needed. Limited to 1,000 API requests/day and 1 collection.
 - **Starter ($49/month)** — Good for small teams or early-stage products. 50,000 API requests/day, 5 collections, email support.
-- **Professional ($199/month)** — For growing teams that need more scale, SSO, multi-region deployment, and faster support response. 500,000 API requests/day, unlimited collections.
+- **Professional ($199/month)** — For growing teams that need more scale, SSO, the EU-West data region option, and faster support response. 500,000 API requests/day, unlimited collections.
 - **Enterprise (custom pricing)** — For large organizations with compliance requirements, dedicated infrastructure, or high-volume needs. Includes SOC 2 Type II, HIPAA options, and a dedicated support engineer.
 
 Not sure? Email us at support@stratifylabs.io and we'll help you pick the right fit.
+
+### What's the difference between Starter and Professional?
+Professional has 10x the daily request volume, unlimited collections, faster support, and the security and search features growing teams need:
+
+| | Starter | Professional |
+|--|---------|-------------|
+| Price | $49/month ($470/year) | $199/month ($1,910/year) |
+| Requests per minute / per day | 60 / 50,000 | 300 / 500,000 |
+| Concurrent connections | 10 | 50 |
+| Collections | 5 | Unlimited |
+| Documents per collection | 50,000 | 500,000 |
+| Max file size | 25 MB | 100 MB |
+| Support | Email; Sev 1 first response in 24 hours | Priority email and live chat; Sev 1 first response in 2 hours |
+| Uptime SLA | 99.5% | 99.9% |
+| SSO (SAML 2.0 / OIDC) and IP allowlist | No | Yes |
+| EU-West (Ireland) data region | No | Yes |
+| Hybrid search, reranking, Answer Cache | No | Yes |
+| Confluence Permission Sync | No | Yes |
+| Integrations | 1 Slack workspace, 1 Zendesk instance, 5 Confluence spaces, 3 webhooks | 3 Slack workspaces, 2 Zendesk instances, 25 Confluence spaces, 10 webhooks |
+| Sync frequency | Every 30 minutes | Every 15 minutes |
+
+Enterprise adds custom limits, a 99.99% SLA, HIPAA configurations (with a signed BAA), custom roles, audit-log streaming to your SIEM, a dedicated support engineer, and a Technical Account Manager.
+
+To switch, go to **Settings > Billing > Change Plan**. Upgrades take effect immediately.
 
 ### What's included in the Free Trial?
 The free trial is 14 days with no credit card required. You get:
@@ -106,7 +130,7 @@ If you change your mind within the 30-day window, contact support@stratifylabs.i
 
 ### Can I get a refund?
 - **New customers**: Full refund within 7 days of your first subscription (one-time, for first-time customers only).
-- **Service outages**: Pro-rated refunds for outages that exceed your plan's SLA commitments.
+- **Service outages**: If monthly uptime falls below your plan's SLA, you get a service credit of 10%, 25%, or 50% of the monthly fee, depending on how far below. Request it from billing@stratifylabs.io within 30 days of the end of the affected month.
 - **Usage charges**: No refunds for API requests, storage, or processing already consumed.
 - **Enterprise customers**: Refund terms are defined in your service agreement.
 

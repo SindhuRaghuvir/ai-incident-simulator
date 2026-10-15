@@ -74,7 +74,7 @@ Slow responses can have a few causes:
 4. **Network latency** — if your application is in a different region from your Stratify Labs data region, there will be added latency. Enterprise plans support multi-region deployment.
 5. **Large result sets** — requesting a high `top_k` value (many results per query) increases processing time. Start with 5 and increase only if needed.
 
-If you're consistently seeing responses over 2 seconds and none of the above applies, contact support@stratifylabs.io with examples.
+If your latency is consistently above the normal range (p95 of 400 ms for `/search` or 4.5 seconds for a full non-streaming `/query` answer, see Performance and Latency) and none of the above applies, contact support@stratifylabs.io with the request IDs of slow requests.
 
 ---
 

@@ -113,10 +113,12 @@ You can reach us at:
 - **Email**: support@stratifylabs.io (response times vary by plan — see below)
 - **Live chat**: Available in your dashboard for Professional and Enterprise customers
 
-Response time by plan:
+Support channels and first-response targets by plan (targets depend on the ticket's severity; Sev 1 is the fastest):
 - **Free Trial / Community**: Community forums, best effort
-- **Starter**: Email support, 48-hour response time
-- **Professional**: Priority email and chat, 4-hour response time
-- **Enterprise**: Dedicated support engineer, 1-hour response time
+- **Starter**: Email support. Sev 1 in 24 hours, Sev 2 and Sev 3 in 48 hours
+- **Professional**: Priority email and live chat. Sev 1 in 2 hours, Sev 2 in 4 hours
+- **Enterprise**: Dedicated support engineer. Sev 1 in 1 hour and Sev 2 in 2 hours, 24/7; a 24/7 phone line for Sev 1
+
+See the Support Policy for the full severity table and how to escalate.
 
 When contacting support, please include your organization name, a description of the issue, and any relevant error messages or screenshots. The more detail you provide, the faster we can help.

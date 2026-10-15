@@ -91,7 +91,7 @@ You can upload documents directly from the **Collections** section of your dashb
 4. Wait for processing — you'll see a confirmation once documents are indexed
 
 ### How long does it take for uploaded documents to be searchable?
-Most documents are indexed within 1–2 minutes. The first query after a new upload may take a few extra seconds while embeddings are being generated. After that, responses should come back in under 500ms.
+Most documents are indexed within 1–2 minutes. The first query after a new upload may take a few extra seconds while embeddings are being generated. After that, `/search` results typically come back in under 300 ms, and streamed `/query` answers start appearing in under a second.
 
 ### Why is my first query slow after uploading?
 This is normal. The first query after ingesting new documents may take 2–5 seconds while embeddings are being generated in the background. Subsequent queries will be fast.
